@@ -36,13 +36,9 @@ export const signup = async (req, res, next) => {
       return next(errorHandler(400, 'Business Registration Number already exists.'));
     }
 
-    const existingUser = await admin.auth().getUserByEmail(email).catch(err => null);
-    if (existingUser) {
-      return next(errorHandler(400, 'Email already exists. Please use a different email.'));
-    }
+   
 
     const userRecord = await admin.auth().createUser({
-      email,
       password,
     });
 

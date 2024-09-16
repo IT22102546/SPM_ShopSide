@@ -39,9 +39,9 @@ export default function SignIn() {
                 dispatch(signInFailure(data.message));
                 return;
             }
-            dispatch(signInSuccess(data.user)); // Ensure `data.user` is the correct user object
-            localStorage.setItem('token', data.token); // Save token for authenticated requests
-            navigate('/'); // Redirect to the home page or wherever is appropriate
+            dispatch(signInSuccess(data.user)); 
+            localStorage.setItem('token', data.token); 
+            navigate('/'); 
         } catch (error) {
             dispatch(signInFailure(error.message));
         }
@@ -53,7 +53,7 @@ export default function SignIn() {
 
     return (
         <div className="min-h-screen flex items-center justify-center" style={{
-            backgroundImage: `url('https://www.scouting.org/wp-content/uploads/2021/07/background-e1626093912462.png')`,
+            backgroundImage: `url('')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
