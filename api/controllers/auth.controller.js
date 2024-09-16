@@ -75,24 +75,24 @@ export const signin = async (req, res, next) => {
     }
 
     try {
-        // Query Firestore to find the user by Business Registration Number (brnumber)
+        
         const brnumberSnapshot = await admin.firestore()
             .collection('users')
             .where('brnumber', '==', brnumber)
             .get();
 
         if (brnumberSnapshot.empty) {
-            console.log('User not found with BR Number:', brnumber); // Debugging log
+            console.log('User not found with BR Number:', brnumber); 
             return next(errorHandler(404, 'User with the provided Business Registration Number not found.'));
         }
 
-        // Get the user document (assuming brnumber is unique, so we take the first match)
+        
         const userDoc = brnumberSnapshot.docs[0];
         const userData = userDoc.data();
 
-        // Compare passwords (consider using hashed passwords in production)
+     
         if (password !== userData.password) {
-            console.log('Password mismatch for BR Number:', brnumber); // Debugging log
+            console.log('Password mismatch for BR Number:', brnumber); 
             return next(errorHandler(401, 'Invalid credentials.'));
         }
 
@@ -100,17 +100,17 @@ export const signin = async (req, res, next) => {
         const token = jwt.sign(
             { uid: userDoc.id, email: userData.email }, // Payload
             process.env.JWT_SECRET,
-            { expiresIn: '1h' } // Token expiration
+            { expiresIn: '1h' } 
         );
 
         // Set token in cookies
         res.cookie('access_token', token, {
-            httpOnly: true, // Prevents client-side JS access
-            secure: process.env.NODE_ENV === 'production', // Set to true in production
-            maxAge: 3600000 // 1 hour
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'production', 
+            maxAge: 3600000 
         });
 
-        // Send the response
+       
         res.status(200).json({
             success: true,
             message: 'Login successful',
@@ -123,7 +123,7 @@ export const signin = async (req, res, next) => {
         });
 
     } catch (error) {
-        console.error('Sign-in error:', error); // Debugging log
+        console.error('Sign-in error:', error); 
         return next(errorHandler(500, error.message || 'Internal Server Error'));
     }
 };
