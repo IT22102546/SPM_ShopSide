@@ -41,7 +41,7 @@ export default function SignIn() {
             }
             dispatch(signInSuccess(data.user)); 
             localStorage.setItem('token', data.token); 
-            navigate('/'); 
+            navigate('/dashboard?tab=profile'); 
         } catch (error) {
             dispatch(signInFailure(error.message));
         }

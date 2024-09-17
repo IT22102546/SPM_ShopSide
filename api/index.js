@@ -5,6 +5,7 @@ import cors from "cors";
 import admin from "firebase-admin";
 import serviceAccount from "./firebase-service-account.json" assert { type: "json" };
 import authRoute from "./routes/auth.route.js";
+import shopRoute from "./routes/shop.route.js";
 
 dotenv.config();
 
@@ -45,6 +46,7 @@ app.listen(3000, async () => {
 
 
 app.use("/api/auth",authRoute);
+app.use("/api/shop",shopRoute); 
 
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
