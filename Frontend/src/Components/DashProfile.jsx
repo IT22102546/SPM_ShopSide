@@ -72,7 +72,7 @@ export default function DashProfile() {
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/${currentUser.uid}`, {
+      const res = await fetch(`/api/shop/delete/${currentUser.brnumber}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -81,7 +81,7 @@ export default function DashProfile() {
         return;
       }
       dispatch(deleteUserSuccess());
-      navigate("/sign-in");
+      navigate("/");
     } catch (error) {
       dispatch(deleteUserFailure(error));
     }
@@ -89,7 +89,7 @@ export default function DashProfile() {
 
   const handleSignOut = async () => {
     try {
-      await fetch("/api/user/signout");
+      await fetch("/api/shop/signout");
       dispatch(signOut());
       navigate("/");
     } catch (error) {

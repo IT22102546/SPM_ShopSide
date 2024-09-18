@@ -89,3 +89,43 @@ export const updateUser = async (req, res, next) => {
     }
 };
 
+export const deleteUser = async (req, res, next) => {
+    const db = admin.firestore();
+    const brnumber = req.params.brnumber;
+
+    if (!brnumber) {
+        return next(errorHandler(400, 'BR Number is required.'));
+    }
+
+    try {
+        // Fetch user document by BR Number
+        const userSnapshot = await db.collection('users')
+            .where('brnumber', '==', brnumber)
+            .get();
+
+        if (userSnapshot.empty) {
+            return next(errorHandler(404, 'User with the provided BR Number not found.'));
+        }
+
+        const userDoc = userSnapshot.docs[0];
+        const userId = userDoc.id;  // Firestore Document ID
+
+        
+        await userDoc.ref.delete();
+        console.log('Deleted user document from Firestore:', userId);
+
+      
+        try {
+            await admin.auth().deleteUser(userId);
+            console.log('Deleted user from Firebase Auth:', userId);
+        } catch (error) {
+            console.error('Error deleting user from Firebase Auth:', error);
+            return next(errorHandler(500, 'Error deleting user from Firebase Auth.'));
+        }
+
+        res.status(200).json({ success: true, message: 'User deleted successfully' });
+    } catch (error) {
+        console.error('Delete user error:', error);
+        next(errorHandler(500, 'Internal Server Error'));
+    }
+};
