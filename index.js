@@ -4,8 +4,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import admin from "firebase-admin";
 import serviceAccount from "./firebase-service-account.json" assert { type: "json" };
-import authRoute from "./routes/auth.route.js";
-import shopRoute from "./routes/shop.route.js";
+import authRoute from "./api/routes/auth.route.js";
+import shopRoute from "./api/routes/shop.route.js";
 
 dotenv.config();
 
