@@ -3,7 +3,7 @@ from scapy.all import sniff
 def packet_handler(packet):
     print(packet.summary())
 
-sniff(prn=packet_handler, iface="Wi-Fi", store=0)
+sniff(prn=packet_handler, iface="Wi-Fi 2", store=0)
 
 
 # from flask import Flask, jsonify

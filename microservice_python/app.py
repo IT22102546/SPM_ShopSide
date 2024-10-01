@@ -10,9 +10,9 @@ import threading
 app = Flask(__name__)
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate("firebase-service-account.json")  # Add the path to your serviceAccountKey.json
-firebase_admin.initialize_app(cred)
-db = firestore.client()
+# cred = credentials.Certificate("firebase-service-account.json")  # Add the path to your serviceAccountKey.json
+# firebase_admin.initialize_app(cred)
+# db = firestore.client()
 
 
 # Dictionary to hold the MAC addresses
@@ -27,18 +27,10 @@ def packet_handler(packet):
             mac_addresses[mac_addr] = True
             print(f"New MAC address detected: {mac_addr}")
 
-# Function to save MAC address to Firebase Firestore
-def save_mac_address(mac_addr):
-    doc_ref = db.collection("devices").document(mac_addr)
-    doc_ref.set({
-        'mac_address': mac_addr,
-        'detected': True
-    })
-
-    
 # Function to start sniffing in a separate thread
 def start_sniffing():
     sniff(prn=packet_handler, iface="Wi-Fi 2", store=0)
+
 
 # API endpoint to return the count of unique devices
 @app.route('/device-count', methods=['GET'])
