@@ -4,8 +4,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import admin from "firebase-admin";
 import serviceAccount from "./firebase-service-account.json" assert { type: "json" };
-import authRoute from "./routes/auth.route.js";
-import shopRoute from "./routes/shop.route.js";
+import authRoute from "./api/routes/auth.route.js";
+import shopRoute from "./api/routes/shop.route.js";
+import crowdRoute from "./api/routes/crowd.route.js";
 
 dotenv.config();
 
@@ -46,7 +47,8 @@ app.listen(3000, async () => {
 
 
 app.use("/api/auth",authRoute);
-app.use("/api/shop",shopRoute); 
+app.use("/api/shop",shopRoute);
+app.use("/api/crowd",crowdRoute); 
 
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
