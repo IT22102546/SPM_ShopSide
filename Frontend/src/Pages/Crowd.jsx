@@ -12,9 +12,11 @@ export default function Crowd() {
   const navigate = useNavigate();
   const { currentUser, loading1 } = useSelector((state) => state.user);
   const brnumber = currentUser.brnumber;
-  console.log(brnumber);
   const [showModel, setShowModel] = useState(false);
   const [lastFetchedTime, setLastFetchedTime] = useState(null);
+  const [CrowdDeviceMacMicroservice,setCrowdDeviceMacMicroservice] = useState(null);
+
+  //console.log(CrowdDeviceMacMicroservice);
 
   useEffect(() => {
     const fetchCrowdCountFromDB = async () => {
@@ -108,9 +110,10 @@ export default function Crowd() {
       // Parse the response
       const data = await res.json();
 
-      if (res.ok && data.crowdCount) {
+      if (res.ok && data.crowdCount && data.device_mac) {
         // Set the crowd count from the microservice to the state
         setCrowdCountMicroService(data.crowdCount);
+        setCrowdDeviceMacMicroservice(data.device_mac)
         setError(null); // Clear any previous errors
 
         // Set the last fetched time to the current time
@@ -196,7 +199,7 @@ export default function Crowd() {
               </div>
               <button
                 type="submit"
-                className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-blue-700"
+                className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
               >
                 Update live count now
               </button>
@@ -223,7 +226,7 @@ export default function Crowd() {
 
             <div className="mt-2 flex flex-wrap justify-start gap-5">
               <form onSubmit={handleSubmitMicroservice}>
-                <button className="p-3 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-blue-700">
+                <button className="p-3 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300">
                   Get live crowd count now
                 </button>
               </form>
@@ -233,10 +236,21 @@ export default function Crowd() {
                   Create crowd record
                 </button>
                 <br />
-                <span className="text-red-800 text-xs font-sans mt-8 block">
+                <span className="text-red-800 text-xs font-sans block">
                   *if you're new to the system, then create only a crowd record
                 </span>
               </Link>
+            </div>
+
+            <hr />
+            <h1 className="text-lg font-sans mt-8">List of device mac addreses</h1>
+            <div className="mt-8">
+                
+                <ul>
+                    {CrowdDeviceMacMicroservice.map((macAddress, index) => (
+                        <li key={index} className="text-gray-600">{macAddress}</li>
+                    ))}
+                </ul>
             </div>
           </div>
 

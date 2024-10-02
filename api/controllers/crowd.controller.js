@@ -66,13 +66,14 @@ export const getCrowdCountMicroservice = async (req, res, next) => {
 
         // Parse the response JSON
         const data = await response.json();
-        const crowdCount = data.device_count;  // Ensure this matches the key from the Python API
+        const crowdCount = data.count;  // Ensure this matches the key from the Python API
+        const device_mac = data.connected_devices;
         
         // Save to Firebase (if needed can uncomment this code below)
         // await admin.database().ref('/crowdCount').set(crowdCount);
         
         // Send the crowd count back to the client
-        res.json({ crowdCount });
+        res.json({ crowdCount, device_mac });
         
         // Log the crowd count to the console (for debugging purposes)
         console.log('Crowd count from microservice:', crowdCount);
