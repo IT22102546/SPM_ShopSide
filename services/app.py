@@ -1,47 +1,50 @@
 from flask import Flask, jsonify
 from scapy.all import sniff
 from scapy.layers.dot11 import Dot11
-import firebase_admin
-from firebase_admin import credentials, firestore
-import threading
-
 import threading
 
 app = Flask(__name__)
 
-# Initialize Firebase Admin SDK
-# cred = credentials.Certificate("firebase-service-account.json")  # Add the path to your serviceAccountKey.json
-# firebase_admin.initialize_app(cred)
-# db = firestore.client()
+# Dictionary to hold the MAC addresses with dummy data for testing
+mac_addresses = {
+    "00:1A:2B:3C:4D:5E": {"device_type": "Smartphone", "signal_strength": -45},
+    "11:22:33:44:55:66": {"device_type": "Laptop", "signal_strength": -60},
+    "11:22:33:44:55:66": {"device_type": "Laptop", "signal_strength": -60},
+}
 
-
-# Dictionary to hold the MAC addresses
-mac_addresses = {}
+# Create a lock object to handle thread safety for mac_addresses
+lock = threading.Lock()
 
 # Function to process packets and extract MAC addresses
 def packet_handler(packet):
     if packet.haslayer(Dot11):
         mac_addr = packet.addr2
-        print(f"Packet captured: {packet.summary()}")  # Print packet summary debugging
-        if mac_addr not in mac_addresses:
-            mac_addresses[mac_addr] = True
-            print(f"New MAC address detected: {mac_addr}")
+
+        if mac_addr:
+            print(f"Packet captured: {packet.summary()}")  # Print packet summary for debugging
+            # Acquire lock before modifying shared data
+            with lock:
+                if mac_addr not in mac_addresses:
+                    # Dynamically add new MAC address to the dictionary
+                    mac_addresses[mac_addr] = {"device_type": "Unknown", "signal_strength": -50}
+                    print(f"New MAC address detected: {mac_addr}")
 
 # Function to start sniffing in a separate thread
 def start_sniffing():
     sniff(prn=packet_handler, iface="Wi-Fi 2", store=0)
 
-
 # API endpoint to return the count of unique devices
 @app.route('/device-count', methods=['GET'])
 def get_device_count():
-    return jsonify({'device_count': len(mac_addresses)})
+    with lock:  # Ensure safe access to the dictionary
+        device_count = len(mac_addresses)
+    return jsonify({'device_count': device_count})
 
-#return mac addreses
+# API endpoint to return the list of MAC addresses
 @app.route('/mac-addresses', methods=['GET'])
 def get_mac_addresses():
-    return jsonify({'mac_addresses': list(mac_addresses.keys())})
-
+    with lock:  # Ensure safe access to the dictionary
+        return jsonify({'mac_addresses': list(mac_addresses.keys())})
 
 # Start the sniffing thread
 sniff_thread = threading.Thread(target=start_sniffing)

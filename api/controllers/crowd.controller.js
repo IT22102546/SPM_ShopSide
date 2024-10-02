@@ -150,6 +150,42 @@ export const updateCrowdCount = async (req, res, next) => {
     }
 };
 
+export const getCountfromDB = async (req, res, next) => {
+    const db = admin.firestore();
+    const brnumber = req.params.brnumber;  // Assuming the BR number is passed as a URL parameter
+
+    // Validate that the brnumber is present
+    if (!brnumber) {
+        return next(errorHandler(400, 'Business Registration (BR) Number is required.'));
+    }
+
+    try {
+        // Query the database for a record matching the brnumber
+        const crowdSnapshot = await db.collection('crowdcount')
+            .where('brnumber', '==', brnumber)
+            .get();
+
+        // Check if the record exists
+        if (crowdSnapshot.empty) {
+            return next(errorHandler(404, 'Record with the provided BR Number not found.'));
+        }
+
+        // Extract the document containing the crowd count
+        const crowdDoc = crowdSnapshot.docs[0];  // Assume there's only one document per BR number
+        const crowdData = crowdDoc.data();  // Get the data from the document
+
+        // Return the crowd count
+        res.status(200).json({
+            success: true,
+            crowdCount: crowdData.crowdCount
+        });
+    } catch (error) {
+        console.error('Error fetching crowd count from the database:', error);
+        next(errorHandler(500, 'Internal Server Error'));
+    }
+};
+
+
 
 
 
