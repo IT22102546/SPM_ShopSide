@@ -19,6 +19,7 @@ export default function App() {
         <Route/>
 
         <Route path='/create-record-crowd' element={<CreateCrowdRecord/>}></Route>
+        
       </Routes>
 
     </BrowserRouter>
