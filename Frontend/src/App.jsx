@@ -5,6 +5,7 @@ import SignIn from './Pages/SignIn';
 import PrivateRoute from './Components/PrivateRoute';
 import DashBoard from './Pages/DashBoard';
 import CreateCrowdRecord from './Pages/CreateCrowdRecord';
+import AllStaff from './Pages/AllStaff';
 
 export default function App() {
   return (
@@ -19,7 +20,7 @@ export default function App() {
         <Route/>
 
         <Route path='/create-record-crowd' element={<CreateCrowdRecord/>}></Route>
-        
+        <Route path='/all-staff'element={<AllStaff/>}/>
       </Routes>
 
     </BrowserRouter>

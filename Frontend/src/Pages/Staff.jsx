@@ -130,7 +130,7 @@ export default function Staff() {
               Add Staff
             </button>
 
-            <Link to="">
+            <Link to="/all-staff">
               <button
                 type="submit"
                 className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
