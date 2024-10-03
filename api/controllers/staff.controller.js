@@ -147,7 +147,7 @@ export const removeAssignedJob = async (req, res, next) => {
   try {
       // Extract parameters and job description from request
       const { staffPhone, brnumber } = req.params;
-      const { jobDescription } = req.body;  // Job description passed in the body
+      const { jobDescription = "No job assigned at this time" } = req.body;  // Job description passed in the body
 
       // Validate if the necessary parameters are provided
       if (!staffPhone || !brnumber ) {
@@ -235,3 +235,43 @@ export const updateStaff = async (req, res, next) => {
       return next(errorHandler(500, 'Internal Server Error'));
   }
 };
+
+export const removeStaff = async (req, res, next) => {
+    const db = admin.firestore();
+  
+    try {
+      // Extract staffPhone and brnumber from the request parameters
+      const { staffPhone, brnumber } = req.params;
+  
+      // Validate if the necessary parameters are provided
+      if (!staffPhone || !brnumber) {
+        return res.status(400).json({ success: false, message: "Staff phone number and BR number are required." });
+      }
+  
+      // Query Firestore to find the staff member by phone number and BR number
+      const staffSnapshot = await db.collection('staff')
+        .where('phone', '==', staffPhone)
+        .where('brnumber', '==', brnumber)
+        .get();
+  
+      // If no staff member is found, return a 404 not found error
+      if (staffSnapshot.empty) {
+        return res.status(404).json({ success: false, message: "Staff member not found with the provided phone number in this branch." });
+      }
+  
+      // Loop through the found staff members (there should typically be only one)
+      staffSnapshot.forEach(async (doc) => {
+        // Delete the staff document from Firestore
+        await db.collection('staff').doc(doc.id).delete();
+        console.log(`Staff member deleted: ${doc.id}`);
+      });
+  
+      // Respond with success after deleting the staff member
+      return res.status(200).json({ success: true, message: "Staff member removed successfully." });
+  
+    } catch (error) {
+      console.error('Error removing staff member:', error);
+      return next(errorHandler(500, 'Internal Server Error'));
+    }
+  };
+  
