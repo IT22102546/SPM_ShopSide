@@ -7,6 +7,7 @@ import serviceAccount from "./firebase-service-account.json" assert { type: "jso
 import authRoute from "./api/routes/auth.route.js";
 import shopRoute from "./api/routes/shop.route.js";
 import crowdRoute from "./api/routes/crowd.route.js";
+import staffRoute from "./api/routes/staff.route.js";
 
 dotenv.config();
 
@@ -48,7 +49,8 @@ app.listen(3000, async () => {
 
 app.use("/api/auth",authRoute);
 app.use("/api/shop",shopRoute);
-app.use("/api/crowd",crowdRoute); 
+app.use("/api/crowd",crowdRoute);
+app.use("/api/staff", staffRoute); 
 
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;

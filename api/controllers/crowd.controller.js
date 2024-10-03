@@ -76,10 +76,10 @@ export const getCrowdCountMicroservice = async (req, res, next) => {
         res.json({ crowdCount, device_mac });
         
         // Log the crowd count to the console (for debugging purposes)
-        console.log('Crowd count from microservice:', crowdCount);
+        //console.log('Crowd count from microservice:', crowdCount);
     } catch (error) {
         // Log the error and send a 500 status response with an error message
-        console.error('Error fetching crowd count:', error);
+        //console.error('Error fetching crowd count:', error);
         res.status(500).json({ error: 'Failed to get crowd count' });
     }
 };

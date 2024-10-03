@@ -14,7 +14,8 @@ export default function Crowd() {
   const brnumber = currentUser.brnumber;
   const [showModel, setShowModel] = useState(false);
   const [lastFetchedTime, setLastFetchedTime] = useState(null);
-  const [CrowdDeviceMacMicroservice,setCrowdDeviceMacMicroservice] = useState(null);
+  const [CrowdDeviceMacMicroservice, setCrowdDeviceMacMicroservice] =
+    useState(null);
 
   //console.log(CrowdDeviceMacMicroservice);
 
@@ -113,7 +114,7 @@ export default function Crowd() {
       if (res.ok && data.crowdCount && data.device_mac) {
         // Set the crowd count from the microservice to the state
         setCrowdCountMicroService(data.crowdCount);
-        setCrowdDeviceMacMicroservice(data.device_mac)
+        setCrowdDeviceMacMicroservice(data.device_mac);
         setError(null); // Clear any previous errors
 
         // Set the last fetched time to the current time
@@ -237,20 +238,28 @@ export default function Crowd() {
                 </button>
                 <br />
                 <span className="text-red-800 text-xs font-sans block">
-                  *if you're new to the system, then create only a crowd record
+                  *if youre new to the system, then create only a crowd record
                 </span>
               </Link>
             </div>
 
             <hr />
-            <h1 className="text-lg font-sans mt-8">List of device mac addreses</h1>
+            <h1 className="text-lg font-sans mt-8">
+              List of device mac addreses
+            </h1>
             <div className="mt-8">
-                
-                <ul>
-                    {CrowdDeviceMacMicroservice.map((macAddress, index) => (
-                        <li key={index} className="text-gray-600">{macAddress}</li>
-                    ))}
-                </ul>
+              <ul>
+                {CrowdDeviceMacMicroservice &&
+                CrowdDeviceMacMicroservice.length > 0 ? (
+                  CrowdDeviceMacMicroservice.map((macAddress, index) => (
+                    <li key={index} className="text-gray-600">
+                      {macAddress}
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-600">No devices connected</li>
+                )}
+              </ul>
             </div>
           </div>
 
