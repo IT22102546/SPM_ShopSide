@@ -3,7 +3,7 @@ import { Alert, Button, Modal, TextInput } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOut, updateUserFailure, updateUserStart, updateUserSuccess } from "../redux/user/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function DashProfile() {
   const dispatch = useDispatch();
@@ -126,9 +126,16 @@ export default function DashProfile() {
         <Button type="submit" gradientDuoTone="purpleToBlue" outline className="bg-slate-400 text-black" disabled={loading}>
           {loading ? "Loading.." : "Update Account"}
         </Button>
-        <Button type="button" gradientDuoTone="purpleToBlue" className="w-full bg-slate-400 text-black" outline>
-          Manage Shop
-        </Button>
+       <Link to="/addcategory">
+          <Button type="button" gradientDuoTone="purpleToBlue" className="w-full bg-slate-400 text-black" outline>
+              Add New Category
+          </Button>
+        </Link> 
+        <Link to="/addproducts">
+          <Button type="button" gradientDuoTone="purpleToBlue" className="w-full bg-slate-400 text-black" outline>
+              Add Products
+          </Button>
+        </Link> 
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span onClick={() => setShowModel(true)} className="cursor-pointer">
