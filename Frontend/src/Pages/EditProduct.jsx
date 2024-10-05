@@ -156,6 +156,19 @@ export default function EditProduct() {
         </div>
 
         <div className="mb-4">
+          <label className="block font-medium text-blue-700">Cell Number:</label>
+          <input
+            type="text"
+            name="cell"
+            value={updatedData.cell || ''}
+            onChange={handleInputChange}
+            className="border border-blue-300 p-2 rounded-lg w-full text-blue-700"
+            required
+          />
+        </div>
+
+
+        <div className="mb-4">
           <label className="block font-medium text-blue-700">Category:</label>
           <select
             name="category"

@@ -116,6 +116,7 @@ export default function AddPostScreen() {
           address: '',
           price: '',
           size: '',
+          cell:'',
           image: '',
           userName: '',
           userEmail: '',
@@ -193,6 +194,18 @@ export default function AddPostScreen() {
                 onChange={handleChange('size')}
                 onBlur={handleBlur('size')}
                 value={values.size}
+                disabled={isUploading}
+              />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label className="text-lg font-medium">Cell Number</label>
+              <input
+                type="text"
+                className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter Cell Number"
+                onChange={handleChange('cell')}
+                onBlur={handleBlur('cell')}
+                value={values.cell}
                 disabled={isUploading}
               />
             </div>
