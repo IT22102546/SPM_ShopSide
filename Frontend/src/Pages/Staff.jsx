@@ -154,104 +154,122 @@ export default function Staff() {
 
       {/* Modal to add staff */}
       <Modal show={isModalOpen} onClose={handleCloseModal}>
-        <Modal.Header>Add New Staff</Modal.Header>
-        <Modal.Body>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label
-                htmlFor="staffGender"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Enter Name
-              </label>
-              <TextInput
-                id="staffName"
-                placeholder="Enter Staff Name"
-                required
-                value={staffName}
-                onChange={(e) => setStaffName(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="staffGender"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Enter Age
-              </label>
-              <TextInput
-                id="staffAge"
-                placeholder="Enter Staff Age"
-                type="number"
-                required
-                value={staffAge}
-                onChange={(e) => setStaffAge(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="staffGender"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Select Gender
-              </label>
-              <select
-                id="staffGender"
-                required
-                value={staffGender}
-                onChange={(e) => setStaffGender(e.target.value)}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-              >
-                <option value="" disabled>
-                  -- Select Gender --
-                </option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
+  <Modal.Header className="bg-purple-700 text-white py-3">
+    <h3 className="bg-purple-700 text-white py-3"
+    >Add New Staff</h3>
+  </Modal.Header>
+  <Modal.Body className="bg-gray-100">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Staff Name */}
+      <div className="mb-4">
+        <label
+          htmlFor="staffName"
+          className="block mb-2 text-sm font-medium text-gray-700"
+        >
+          Enter Name
+        </label>
+        <TextInput
+          id="staffName"
+          placeholder="Enter Staff Name"
+          required
+          value={staffName}
+          onChange={(e) => setStaffName(e.target.value)}
+          className="bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 shadow-sm"
+        />
+      </div>
 
-            <div className="mb-4">
-              <label
-                htmlFor="staffGender"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Enter Phone Number
-              </label>
-              <TextInput
-                id="staffAge"
-                placeholder="Enter Staff Phone"
-                required
-                type="number"
-                value={staffPhone}
-                onChange={(e) => setStaffPhone(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="staffGender"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Enter Email
-              </label>
-              <TextInput
-                id="staffEmail"
-                type="email"
-                placeholder="Enter Staff Email"
-                required
-                value={staffEmail}
-                onChange={(e) => setStaffEmail(e.target.value)}
-              />
-            </div>
-            <Button
-              type="submit"
-              className="mx-auto w-full px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-            >
-              Add Staff
-            </Button>
-          </form>
-        </Modal.Body>
-      </Modal>
+      {/* Staff Age */}
+      <div className="mb-4">
+        <label
+          htmlFor="staffAge"
+          className="block mb-2 text-sm font-medium text-gray-700"
+        >
+          Enter Age
+        </label>
+        <TextInput
+          id="staffAge"
+          type="number"
+          placeholder="Enter Staff Age"
+          required
+          value={staffAge}
+          onChange={(e) => setStaffAge(e.target.value)}
+          className="bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 shadow-sm"
+        />
+      </div>
+
+      {/* Staff Gender */}
+      <div className="mb-4">
+        <label
+          htmlFor="staffGender"
+          className="block mb-2 text-sm font-medium text-gray-700"
+        >
+          Select Gender
+        </label>
+        <select
+          id="staffGender"
+          required
+          value={staffGender}
+          onChange={(e) => setStaffGender(e.target.value)}
+          className="bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 shadow-sm"
+        >
+          <option value="" disabled>
+            -- Select Gender --
+          </option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      {/* Phone Number */}
+      <div className="mb-4">
+        <label
+          htmlFor="staffPhone"
+          className="block mb-2 text-sm font-medium text-gray-700"
+        >
+          Enter Phone Number
+        </label>
+        <TextInput
+          id="staffPhone"
+          placeholder="Enter Staff Phone"
+          type="number"
+          required
+          value={staffPhone}
+          onChange={(e) => setStaffPhone(e.target.value)}
+          className="bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 shadow-sm"
+        />
+      </div>
+
+      {/* Email */}
+      <div className="mb-4">
+        <label
+          htmlFor="staffEmail"
+          className="block mb-2 text-sm font-medium text-gray-700"
+        >
+          Enter Email
+        </label>
+        <TextInput
+          id="staffEmail"
+          type="email"
+          placeholder="Enter Staff Email"
+          required
+          value={staffEmail}
+          onChange={(e) => setStaffEmail(e.target.value)}
+          className="bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 shadow-sm"
+        />
+      </div>
+
+      {/* Submit Button */}
+      <Button
+        type="submit"
+        className="mx-auto w-full px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-purple-900 text-white font-bold hover:from-purple-700 hover:to-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-400 transition duration-300 shadow-lg"
+      >
+        Add Staff
+      </Button>
+    </form>
+  </Modal.Body>
+</Modal>
+
     </div>
   );
 }

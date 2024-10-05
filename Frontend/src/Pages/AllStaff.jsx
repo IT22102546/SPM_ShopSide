@@ -236,43 +236,44 @@ export default function AllStaff() {
         </div>
 
         <h1 className="text-xl px-10 pb-4 font-sans">Staff Records</h1>
-        <Link to='/dashboard?tab=staff' className="p-10">
-          <button
-            className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-          >
+        <Link to="/dashboard?tab=staff" className="p-10">
+          <button className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300">
             Return
           </button>
         </Link>
-        <div className="p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+        <div className="p-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {staffRecords.map((staff) => (
-            <div key={staff.id} className="bg-white rounded-lg shadow-md p-5">
-              <h2 className="text-xl font-bold">{staff.name}</h2>
+            <div key={staff.id} className="bg-white p-5 rounded-lg shadow-md">
+              <h2 className="text-lg font-semibold">{staff.name}</h2>
               <p>Email: {staff.email}</p>
               <p>Gender: {staff.gender}</p>
               <p>Phone: {staff.phone}</p>
               <p>Age: {staff.age} yrs</p>
               <p>Assigned Job: {staff.jobDescription}</p>
-              <div className="mt-4 flex space-x-2">
+              <div className="flex justify-between mt-3">
                 <button
-                  className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
+                  className="p-1 px-2 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-100"
                   onClick={() => handleAssignJobClick(staff)}
                 >
                   Assign Job
                 </button>
                 <button
-                  className="p-2 px-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-300"
+                  className="p-1 px-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-100"
                   onClick={() => handleRemoveJobClick(staff)}
                 >
                   Remove Job
                 </button>
+              </div>
+              <div className="flex justify-between mt-3">
                 <button
-                  className="p-2 px-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition duration-300"
+                  className="p-1 px-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition duration-100"
                   onClick={() => handleUpdateStaffClick(staff)}
                 >
                   Update
                 </button>
                 <button
-                  className="p-2 px-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-300"
+                  className="p-1 px-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-100"
                   onClick={() => handleRemoveStaff(staff)}
                 >
                   Remove
@@ -283,100 +284,152 @@ export default function AllStaff() {
         </div>
       </div>
 
-      {/* Assign Job Modal */}
-      <Modal
-        show={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+      {/* Modal to assign a job */}
+      <Modal 
+  show={isModalOpen} 
+  onClose={() => setIsModalOpen(false)} 
+  className="rounded-lg shadow-lg transition-all duration-300 ease-in-out transform scale-105"
+>
+  <Modal.Header className="text-lg font-bold text-white bg-blue-600 rounded-t-lg p-4 shadow-md">
+    Assign Job to {selectedStaff?.name}
+  </Modal.Header>
+  <Modal.Body className="bg-gray-50 p-6 space-y-6">
+    <div>
+      <Label 
+        htmlFor="jobDescription" 
+        className="text-sm font-semibold text-gray-600"
       >
-        <Modal.Header>Assign Job to {selectedStaff?.name}</Modal.Header>
-        <Modal.Body>
-          <Label htmlFor="job-description" value="Job Description" />
-          <TextInput
-            id="job-description"
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-            placeholder="Enter job description"
-          />
-          {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-          {successMessage && <p className="text-green-600">{successMessage}</p>}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={handleSubmitJob}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Assigning..." : "Assign"}
-          </Button>
-          <Button
-            color="gray"
-            onClick={() => {
-              setIsModalOpen(false);
-              setJobDescription("");
-            }}
-          >
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        Job Description
+      </Label>
+      <TextInput
+        id="jobDescription"
+        type="text"
+        className="border-2 border-blue-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        placeholder="Enter job description"
+        value={jobDescription}
+        onChange={(e) => setJobDescription(e.target.value)}
+      />
+    </div>
+  </Modal.Body>
+  <Modal.Footer className="flex justify-between bg-gray-100 p-4 rounded-b-lg">
+    <Button 
+      onClick={handleSubmitJob} 
+      disabled={isSubmitting} 
+      className={`bg-blue-600 text-white p-2 px-4 rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+    >
+      {isSubmitting ? "Assigning..." : "Assign"}
+    </Button>
+    <Button 
+      color="gray" 
+      className="text-gray-600 hover:text-gray-900 hover:bg-gray-200 p-2 rounded-lg transition duration-150 ease-in-out"
+      onClick={() => setIsModalOpen(false)}
+    >
+      Cancel
+    </Button>
+  </Modal.Footer>
+</Modal>
 
-      {/* Update Staff Modal */}
-      <Modal
-        show={isUpdateModalOpen}
-        onClose={() => setIsUpdateModalOpen(false)}
-      >
-        <Modal.Header>Update Staff Details</Modal.Header>
-        <Modal.Body>
-          <Label htmlFor="name" value="Name" />
-          <TextInput
-            id="name"
-            value={updatedStaffDetails.name}
-            onChange={(e) =>
-              setUpdatedStaffDetails({ ...updatedStaffDetails, name: e.target.value })
-            }
-          />
-          <Label htmlFor="email" value="Email" />
-          <TextInput
-            id="email"
-            type="email"
-            value={updatedStaffDetails.email}
-            onChange={(e) =>
-              setUpdatedStaffDetails({ ...updatedStaffDetails, email: e.target.value })
-            }
-          />
-          <Label htmlFor="phone" value="Phone" />
-          <TextInput
-            id="phone"
-            value={updatedStaffDetails.phone}
-            onChange={(e) =>
-              setUpdatedStaffDetails({ ...updatedStaffDetails, phone: e.target.value })
-            }
-          />
-          <Label htmlFor="age" value="Age" />
-          <TextInput
-            id="age"
-            value={updatedStaffDetails.age}
-            onChange={(e) =>
-              setUpdatedStaffDetails({ ...updatedStaffDetails, age: e.target.value })
-            }
-          />
-          {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-          {successMessage && <p className="text-green-600">{successMessage}</p>}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={handleSubmitUpdate}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Updating..." : "Update"}
-          </Button>
-          <Button
-            color="gray"
-            onClick={() => setIsUpdateModalOpen(false)}
-          >
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
+{/* Update Staff Modal */}
+<Modal 
+  show={isUpdateModalOpen} 
+  onClose={() => setIsUpdateModalOpen(false)} 
+  className="rounded-lg shadow-lg transition-all duration-300 ease-in-out transform scale-105"
+>
+  <Modal.Header className="text-lg font-bold text-white bg-green-600 rounded-t-lg p-4 shadow-md">
+    Update Staff Details for {selectedStaff?.name}
+  </Modal.Header>
+  <Modal.Body className="bg-gray-50 p-6 space-y-6">
+    <div>
+      <Label htmlFor="staffName" className="text-sm font-semibold text-gray-600">
+        Name
+      </Label>
+      <TextInput
+        id="staffName"
+        type="text"
+        className="border-2 border-green-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+        placeholder="Enter staff name"
+        value={updatedStaffDetails.name}
+        onChange={(e) =>
+          setUpdatedStaffDetails((prevDetails) => ({
+            ...prevDetails,
+            name: e.target.value,
+          }))
+        }
+      />
+    </div>
+    <div>
+      <Label htmlFor="staffEmail" className="text-sm font-semibold text-gray-600">
+        Email
+      </Label>
+      <TextInput
+        id="staffEmail"
+        type="email"
+        className="border-2 border-green-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+        placeholder="Enter staff email"
+        value={updatedStaffDetails.email}
+        onChange={(e) =>
+          setUpdatedStaffDetails((prevDetails) => ({
+            ...prevDetails,
+            email: e.target.value,
+          }))
+        }
+      />
+    </div>
+    <div>
+      <Label htmlFor="staffPhone" className="text-sm font-semibold text-gray-600">
+        Phone
+      </Label>
+      <TextInput
+        id="staffPhone"
+        type="text"
+        className="border-2 border-green-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+        placeholder="Enter staff phone"
+        value={updatedStaffDetails.phone}
+        onChange={(e) =>
+          setUpdatedStaffDetails((prevDetails) => ({
+            ...prevDetails,
+            phone: e.target.value,
+          }))
+        }
+      />
+    </div>
+    <div>
+      <Label htmlFor="staffAge" className="text-sm font-semibold text-gray-600">
+        Age
+      </Label>
+      <TextInput
+        id="staffAge"
+        type="number"
+        className="border-2 border-green-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+        placeholder="Enter staff age"
+        value={updatedStaffDetails.age}
+        onChange={(e) =>
+          setUpdatedStaffDetails((prevDetails) => ({
+            ...prevDetails,
+            age: e.target.value,
+          }))
+        }
+      />
+    </div>
+  </Modal.Body>
+  <Modal.Footer className="flex justify-between bg-gray-100 p-4 rounded-b-lg">
+    <Button 
+      onClick={handleSubmitUpdate} 
+      disabled={isSubmitting} 
+      className={`bg-green-600 text-white p-2 px-4 rounded-lg hover:bg-green-700 transition duration-150 ease-in-out ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+    >
+      {isSubmitting ? "Updating..." : "Update"}
+    </Button>
+    <Button 
+      color="gray" 
+      className="text-gray-600 hover:text-gray-900 hover:bg-gray-200 p-2 rounded-lg transition duration-150 ease-in-out"
+      onClick={() => setIsUpdateModalOpen(false)}
+    >
+      Cancel
+    </Button>
+  </Modal.Footer>
+</Modal>
+
     </>
   );
 }
