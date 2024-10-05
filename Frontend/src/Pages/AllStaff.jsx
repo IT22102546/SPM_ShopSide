@@ -1,4 +1,4 @@
-import { Label, TextInput, Table, Modal, Button } from "flowbite-react";
+import { Label, TextInput, Modal, Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -48,13 +48,12 @@ export default function AllStaff() {
     }
   }, [currentUser.brnumber]);
 
-  // Handle assigning job (already exists in your code)
+  // Handle assigning job
   const handleAssignJobClick = (staff) => {
     setSelectedStaff(staff);
     setIsModalOpen(true);
   };
 
-  // Submit job assignment (already exists in your code)
   const handleSubmitJob = async () => {
     if (!jobDescription.trim()) {
       setErrorMessage("Job description cannot be empty.");
@@ -78,8 +77,7 @@ export default function AllStaff() {
       if (data.success) {
         setSuccessMessage("Job assigned successfully.");
         setIsModalOpen(false);
-        // Refresh staff records after successful job assignment
-        fetchAllStaff(); // Fetch staff records to show the update
+        fetchAllStaff(); // Refresh staff records
       } else {
         setErrorMessage("Failed to assign job.");
       }
@@ -105,8 +103,7 @@ export default function AllStaff() {
 
       if (data.success) {
         setSuccessMessage("Job removed successfully.");
-        // Refresh staff records after successful job removal
-        fetchAllStaff(); // Fetch staff records to reflect the removed job
+        fetchAllStaff(); // Refresh staff records
       } else {
         setErrorMessage("Failed to remove job.");
       }
@@ -118,7 +115,7 @@ export default function AllStaff() {
     }
   };
 
-  //REMOVE STAFF MEMBERS
+  // REMOVE STAFF MEMBERS
   const handleRemoveStaff = async (staff) => {
     try {
       setIsSubmitting(true);
@@ -132,14 +129,13 @@ export default function AllStaff() {
 
       if (data.success) {
         setSuccessMessage("Staff removed successfully.");
-        // Refresh staff records after successful job removal
-        fetchAllStaff(); // Fetch staff records to reflect the removed job
+        fetchAllStaff(); // Refresh staff records
       } else {
-        setErrorMessage("Failed to remove Staff member.");
+        setErrorMessage("Failed to remove staff member.");
       }
     } catch (error) {
-      console.error("Error removing job:", error);
-      setErrorMessage("Failed to remove job.");
+      console.error("Error removing staff:", error);
+      setErrorMessage("Failed to remove staff.");
     } finally {
       setIsSubmitting(false);
     }
@@ -192,7 +188,7 @@ export default function AllStaff() {
       if (data.success) {
         setSuccessMessage("Staff updated successfully.");
         setIsUpdateModalOpen(false);
-        fetchAllStaff(); // Refresh staff records after successful update
+        fetchAllStaff(); // Refresh staff records after update
       } else {
         setErrorMessage("Failed to update staff.");
       }
@@ -203,7 +199,6 @@ export default function AllStaff() {
       setIsSubmitting(false);
     }
   };
-
 
   return (
     <>
@@ -242,160 +237,142 @@ export default function AllStaff() {
 
         <h1 className="text-xl px-10 pb-4 font-sans">Staff Records</h1>
         <Link to='/dashboard?tab=staff' className="p-10">
-        
-            <button
+          <button
             className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-
-            >
+          >
             Return
-            </button>
+          </button>
         </Link>
-        <div className="p-10">
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-          <Table>
-            <Table.Head className="text-center">
-              <Table.HeadCell>Name</Table.HeadCell>
-              <Table.HeadCell>Email</Table.HeadCell>
-              <Table.HeadCell>Gender</Table.HeadCell>
-              <Table.HeadCell>Phone</Table.HeadCell>
-              <Table.HeadCell>Age</Table.HeadCell>
-              <Table.HeadCell>Assigned Job</Table.HeadCell>
-              <Table.HeadCell>Actions</Table.HeadCell>
-            </Table.Head>
-            <Table.Body>
-              {staffRecords.map((staff) => (
-                <Table.Row key={staff.id} className="text-center">
-                  <Table.Cell>{staff.name}</Table.Cell>
-                  <Table.Cell>{staff.email}</Table.Cell>
-                  <Table.Cell>{staff.gender}</Table.Cell>
-                  <Table.Cell>{staff.phone}</Table.Cell>
-                  <Table.Cell>{staff.age} yrs</Table.Cell>
-                  <Table.Cell>{staff.jobDescription}</Table.Cell>
-                  <Table.Cell>
-                    <button
-                      className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-                      onClick={() => handleAssignJobClick(staff)}
-                    >
-                      Assign Job
-                    </button>
-                    <button
-                      className="mx-1 p-2 px-3 rounded-lg bg-gradient-to-r from-pink-700 to-pink-900 text-white hover:bg-gradient-to-r hover:from-pink-700 hover:to-pink-800 transition duration-300"
-                      onClick={() => handleRemoveJobClick(staff)}
-                    >
-                      Remove Job
-                    </button>
-                    <button
-                      className="mx-1 p-2 px-3 rounded-lg bg-gradient-to-r from-green-700 to-green-900 text-white hover:bg-gradient-to-r hover:from-green-700 hover:to-green-800 transition duration-300"
-                      onClick={() => handleUpdateStaffClick(staff) }
-                    >
-                      Update
-                    </button>
-                    <button
-                      className=" p-2 px-3 rounded-lg bg-gradient-to-r from-red-700 to-red-900 text-white hover:bg-gradient-to-r hover:from-red-700 hover:to-red-800 transition duration-300"
-                      onClick={() => handleRemoveStaff(staff)}
-                    >
-                      Remove
-                    </button>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
+        <div className="p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {staffRecords.map((staff) => (
+            <div key={staff.id} className="bg-white rounded-lg shadow-md p-5">
+              <h2 className="text-xl font-bold">{staff.name}</h2>
+              <p>Email: {staff.email}</p>
+              <p>Gender: {staff.gender}</p>
+              <p>Phone: {staff.phone}</p>
+              <p>Age: {staff.age} yrs</p>
+              <p>Assigned Job: {staff.jobDescription}</p>
+              <div className="mt-4 flex space-x-2">
+                <button
+                  className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
+                  onClick={() => handleAssignJobClick(staff)}
+                >
+                  Assign Job
+                </button>
+                <button
+                  className="p-2 px-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-300"
+                  onClick={() => handleRemoveJobClick(staff)}
+                >
+                  Remove Job
+                </button>
+                <button
+                  className="p-2 px-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition duration-300"
+                  onClick={() => handleUpdateStaffClick(staff)}
+                >
+                  Update
+                </button>
+                <button
+                  className="p-2 px-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-300"
+                  onClick={() => handleRemoveStaff(staff)}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Modal for Assigning Job */}
-      {isModalOpen && (
-        <Modal
-          show={isModalOpen}
-          size="lg"
-          popup={true}
-          onClose={() => setIsModalOpen(false)}
-        >
-          <Modal.Header />
-          <Modal.Body>
-            <div className="space-y-6">
-              <h3 className="text-xl font-medium text-gray-900">
-                Assign Job to:{" "}
-                <span className="text-purple-700">{selectedStaff?.name}</span>
-              </h3>
-              <div>
-                <Label htmlFor="jobDescription" value="Job Description" />
-                <TextInput
-                  id="jobDescription"
-                  placeholder="Enter job description"
-                  value={jobDescription}
-                  onChange={(e) => setJobDescription(e.target.value)}
-                  required={true}
-                />
-              </div>
-              <div className="w-full flex justify-end gap-2">
-                <Button
-                  className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-                  onClick={handleSubmitJob}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Submitting..." : "Submit"}
-                </Button>
-                <Button
-                  className="p-2 px-3 rounded-lg bg-gradient-to-r from-gray-600 to-gray-700 text-white"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </Modal.Body>
-        </Modal>
-      )}
-
-      {/* Modal for Updating Staff */}
-      <Modal show={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)}>
-        <Modal.Header>Update Staff</Modal.Header>
+      {/* Assign Job Modal */}
+      <Modal
+        show={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      >
+        <Modal.Header>Assign Job to {selectedStaff?.name}</Modal.Header>
         <Modal.Body>
-          <div>
-            <Label htmlFor="staff-name" value="Name" />
-            <TextInput
-              id="staff-name"
-              value={updatedStaffDetails.name}
-              onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, name: e.target.value })}
-              required
-            />
-            <Label htmlFor="staff-email" value="Email" />
-            <TextInput
-              id="staff-email"
-              type="email"
-              value={updatedStaffDetails.email}
-              onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, email: e.target.value })}
-              required
-            />
-            <Label htmlFor="staff-phone" value="Phone" />
-            <TextInput
-              id="staff-phone"
-              value={updatedStaffDetails.phone}
-              readOnly // Read-only since we don't want to change the phone
-            />
-            <Label htmlFor="staff-age" value="Age" />
-            <TextInput
-              id="staff-age"
-              value={updatedStaffDetails.age}
-              onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, age: e.target.value })}
-              required
-            />
-            {errorMessage && (
-              <p className="text-red-500">{errorMessage}</p>
-            )}
-          </div>
+          <Label htmlFor="job-description" value="Job Description" />
+          <TextInput
+            id="job-description"
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+            placeholder="Enter job description"
+          />
+          {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+          {successMessage && <p className="text-green-600">{successMessage}</p>}
         </Modal.Body>
         <Modal.Footer>
           <Button
+            onClick={handleSubmitJob}
             disabled={isSubmitting}
+          >
+            {isSubmitting ? "Assigning..." : "Assign"}
+          </Button>
+          <Button
+            color="gray"
+            onClick={() => {
+              setIsModalOpen(false);
+              setJobDescription("");
+            }}
+          >
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Update Staff Modal */}
+      <Modal
+        show={isUpdateModalOpen}
+        onClose={() => setIsUpdateModalOpen(false)}
+      >
+        <Modal.Header>Update Staff Details</Modal.Header>
+        <Modal.Body>
+          <Label htmlFor="name" value="Name" />
+          <TextInput
+            id="name"
+            value={updatedStaffDetails.name}
+            onChange={(e) =>
+              setUpdatedStaffDetails({ ...updatedStaffDetails, name: e.target.value })
+            }
+          />
+          <Label htmlFor="email" value="Email" />
+          <TextInput
+            id="email"
+            type="email"
+            value={updatedStaffDetails.email}
+            onChange={(e) =>
+              setUpdatedStaffDetails({ ...updatedStaffDetails, email: e.target.value })
+            }
+          />
+          <Label htmlFor="phone" value="Phone" />
+          <TextInput
+            id="phone"
+            value={updatedStaffDetails.phone}
+            onChange={(e) =>
+              setUpdatedStaffDetails({ ...updatedStaffDetails, phone: e.target.value })
+            }
+          />
+          <Label htmlFor="age" value="Age" />
+          <TextInput
+            id="age"
+            value={updatedStaffDetails.age}
+            onChange={(e) =>
+              setUpdatedStaffDetails({ ...updatedStaffDetails, age: e.target.value })
+            }
+          />
+          {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+          {successMessage && <p className="text-green-600">{successMessage}</p>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
             onClick={handleSubmitUpdate}
-            className="p-1 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
+            disabled={isSubmitting}
           >
             {isSubmitting ? "Updating..." : "Update"}
           </Button>
-          <Button color="gray" onClick={() => setIsUpdateModalOpen(false)}>
+          <Button
+            color="gray"
+            onClick={() => setIsUpdateModalOpen(false)}
+          >
             Cancel
           </Button>
         </Modal.Footer>
