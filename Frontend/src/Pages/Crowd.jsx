@@ -232,6 +232,13 @@ export default function Crowd() {
                 </button>
               </form>
 
+              <Link to="/crowd-statistics">
+                <button className="p-3 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300">
+                 Statistics
+                </button>
+                <br />
+              </Link>
+
               <Link to="/create-record-crowd">
                 <button className="p-3 px-3 rounded-lg bg-gradient-to-r from-blue-700 to-blue-900 text-white hover:bg-blue-700">
                   Create crowd record
@@ -241,6 +248,8 @@ export default function Crowd() {
                   *if youre new to the system, then create only a crowd record
                 </span>
               </Link>
+
+
             </div>
 
             <hr />

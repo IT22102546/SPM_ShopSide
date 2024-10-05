@@ -9,6 +9,7 @@ import AllStaff from './Pages/AllStaff';
 import AddCategory from './Pages/AddCategory';
 import AddPostScreen from './Pages/AddProduct';
 import EditProduct from './Pages/EditProduct';
+import CrowdStatistics from './Pages/CrowdStatistics';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/addcategory" element={<AddCategory/>}/> 
           <Route path="/addproducts" element={<AddPostScreen/>}/>
           <Route path='/create-record-crowd' element={<CreateCrowdRecord/>}></Route>
+          <Route path="/crowd-statistics" element={<CrowdStatistics/>}/>
           <Route path='/all-staff'element={<AllStaff/>}/>
           <Route path="/edit-product/:productId" element={<EditProduct/>} />
         <Route/>
