@@ -1,5 +1,7 @@
 import admin from 'firebase-admin';
 import { errorHandler } from '../utils/error.js';
+import jwt from 'jsonwebtoken';  
+import { v4 as uuidv4 } from 'uuid';
 
 export const testStaff = async(req, res, next) =>{
     res.json({message:'Staff API is Working'});
@@ -95,6 +97,7 @@ export const getStaff = async (req, res, next) => {
       return next(errorHandler(500, 'Internal Server Error'));
   }
 };
+
 
 
 export const assignStaff = async (req, res, next) => {
@@ -274,4 +277,170 @@ export const removeStaff = async (req, res, next) => {
       return next(errorHandler(500, 'Internal Server Error'));
     }
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //staff member
+
+  export const staffsignup = async (req, res, next) => {
+    const { fname, lname, email, password } = req.body;
   
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{5,}$/;
+   
+  
+    if (!fname || !lname || !email || !password) {
+      return next(errorHandler(400, 'Please fill in all fields.'));
+    } else if (!passwordRegex.test(password)) {
+      return next(errorHandler(400, 'Password must be at least 5 characters long with one uppercase letter, one digit, and one symbol.'));
+    }
+  
+    try {
+      // Check if shopname already exists
+      const staffemail = await admin.firestore()
+        .collection('members')
+        .where('email', '==', email)
+        .get();
+  
+      if (!staffemail.empty) {
+        return next(errorHandler(400, 'email  already exists. Please choose a different one.'));
+      }
+  
+  
+      
+      const staffRecord = await admin.auth().createUser({
+        fname,
+        lname,
+        email,
+        password
+      });
+  
+      console.log('staff Record:', staffRecord);
+  
+      
+      const userRef = admin.firestore().collection('members').doc(staffRecord.uid);
+      await userRef.set({
+        fname,
+        lname,
+        email,
+        password,  
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+  
+      // Respond with success
+      res.status(201).json({
+        success: true,
+        message: 'staff created successfully',
+        uid: staffRecord.uid,
+        email,
+      });
+    } catch (error) {
+      console.error('Signup error:', error);
+      return next(errorHandler(500, error.message || 'Internal Server Error'));
+    }
+  };
+  
+  
+  
+  export const staffsignin = async (req, res, next) => {
+    const { email, password } = req.body;
+  
+    if (!email || !password) {
+        return next(errorHandler(400, 'Please provide both Business Registration Number and password.'));
+    }
+  
+    try {
+        
+        const staffemail = await admin.firestore()
+            .collection('members')
+            .where('email', '==', email)
+            .get();
+  
+        if (staffemail.empty) {
+            console.log('User not found with BR Number:', email); 
+            return next(errorHandler(404, 'User with the provided Business Registration Number not found.'));
+        }
+  
+        
+        const userDoc = staffemail.docs[0];
+        const userData = userDoc.data();
+  
+     
+        if (password !== userData.password) {
+            console.log('Password mismatch for BR Number:', email); 
+            return next(errorHandler(401, 'Invalid credentials.'));
+        }
+  
+        // Create a token
+        const token = jwt.sign(
+            { uid: userDoc.id, email: userData.email }, // Payload
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' } 
+        );
+  
+        // Set token in cookies
+        res.cookie('access_token', token, {
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'members', 
+            maxAge: 3600000 
+        });
+  
+       
+        res.status(200).json({
+            success: true,
+            message: 'Login successful',
+            user: {
+                email: userData.email,
+                password: userData.password,
+                fname: userData.fname,
+                lname: userData.lname,
+                createdAt: userData.createdAt,
+            },
+        });
+  
+    } catch (error) {
+        console.error('Sign-in error:', error); 
+        return next(errorHandler(500, error.message || 'Internal Server Error'));
+    }
+  };
+  
+
+  export const getallStaff = async (req, res, next) => {
+    const db = admin.firestore();
+
+    try {
+        // Query Firestore to get all staff members
+        const staffSnapshot = await db.collection('staff')
+            .get();
+
+        // If no staff members are found, return an appropriate message
+        if (staffSnapshot.empty) {
+            return res.status(404).json({ success: false, message: 'No staff members found.' });
+        }
+
+        // Extract staff data from the snapshot
+        const staffList = staffSnapshot.docs.map(doc => ({
+             // Document ID
+            ...doc.data()  // All staff details
+        }));
+
+        // Respond with the list of staff members
+        return res.status(200).json({ success: true, staff: staffList });
+        
+    } catch (error) {
+        console.error('Error fetching staff members:', error);
+        return next(errorHandler(500, 'Internal Server Error'));
+    }
+};

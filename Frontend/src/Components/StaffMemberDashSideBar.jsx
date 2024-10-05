@@ -1,4 +1,4 @@
-import { Sidebar } from "flowbite-react";
+import { Button, Sidebar } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiArchive, HiArrowSmRight, HiDocument, HiFolderAdd, HiGift, HiOutlineUserGroup, HiUser, HiUserGroup} from 'react-icons/hi';
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import { signOut } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
 
-export default function DashSideBar() {
+export default function StaffMemberDashSideBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,33 +23,14 @@ export default function DashSideBar() {
     }
   }, [location.search]);
 
-  const handleSignOut = async () => {
-    try {
-      await fetch('/api/user/signout');
-      dispatch(signOut());
-      navigate('/');
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
+  
 
   return (
     <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Link to='/dashboard?tab=profile' key="profile">
-            <Sidebar.Item 
-              active={tab === 'profile'} 
-              icon={HiUser} 
-              label={currentUser?.isAdmin ? 'Admin' : 'User'} 
-              labelColor='dark'
-              as='div'
-            >
-              Profile
-            </Sidebar.Item>
-          </Link>
-
-
+         
               <Link to='/dashboard?tab=products' key="products">
                 <Sidebar.Item
                   active={tab === 'products'}
@@ -60,35 +41,22 @@ export default function DashSideBar() {
                 </Sidebar.Item>
               </Link>
 
-              <Link to='/dashboard?tab=crowd' key="crowd">
-                <Sidebar.Item
-                  active={tab === 'crowd'}
-                  icon={HiUserGroup}
-                  as='div'
-                >
-                  Crowd Status
-                </Sidebar.Item>
-              </Link>
-
-              <Link to='/dashboard?tab=staff' key="crowd">
+             
+             
+              <Link to='/all-task-to-staff'>
                 <Sidebar.Item
                   active={tab === 'staff'}
                   icon={HiDocument}
                   as='div'
                 >
-                  Staff Management
+                 View Tasks
                 </Sidebar.Item>
               </Link>
-             
-  
-          <Sidebar.Item 
-            icon={HiArrowSmRight} 
-            className="cursor-pointer" 
-            onClick={handleSignOut}
-            key="signout"
+          <Button 
+          href="/staffSignIn"
           >
             Sign Out
-          </Sidebar.Item>
+          </Button>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>
