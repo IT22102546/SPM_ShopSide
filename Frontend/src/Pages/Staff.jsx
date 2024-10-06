@@ -95,30 +95,30 @@ export default function Staff() {
       <div className="bg-gray-900 bg-opacity-60 w-full h-full absolute top-0 left-0"></div> {/* Overlay for text contrast */}
 
       <div className="relative p-10 flex flex-col justify-between gap-32">
-        <div>
-          <h1 className="text-2xl font-cinzel font-semibold text-white">
-            Welcome back!,{" "}
-            <span className="text-gradient-to-r from-purple-300 to-purple-500 font-normal">
-              {currentUser.shopname}
-            </span>
-            <br />
-            <div className="text-sm font-sans font-normal mt-5 text-gray-200">
-         
-              <h1>
-                Email{" "}
-                <span className="text-gray-400 font-normal mx-14">
-                  : {currentUser.email}
-                </span>
-              </h1>
-              <h1>
-                BR Number{" "}
-                <span className="text-gray-400 font-normal mx-4">
-                  : {currentUser.brnumber}
-                </span>
-              </h1>
-            </div>
-          </h1>
-        </div>
+      <div className="p-8 flex flex-wrap justify-between gap-12">
+      <div className="p-6 bg-white/50 backdrop-blur-lg rounded-xl shadow-lg border border-gray-200">
+  <h1 className="text-4xl font-cinzel font-bold text-gray-900">
+    Welcome back,{" "}
+    <span className="bg-gradient-to-r from-purple-600 to-purple-800 text-transparent bg-clip-text">
+      {currentUser.shopname}
+    </span>
+  </h1>
+  <div className="text-md font-sans font-light mt-6 space-y-4">
+    <h2 className="text-gray-600">
+      Email{" "}
+      <span className="text-gray-700 font-medium">
+        : {currentUser.email}
+      </span>
+    </h2>
+    <h2 className="text-gray-600">
+      BR Number{" "}
+      <span className="text-gray-700 font-medium">
+        : {currentUser.brnumber}
+      </span>
+    </h2>
+  </div>
+</div>
+</div>
 
         <div className="relative p-10">
           <div className="flex lg:flex-row lg:justify-between items-start gap-5">

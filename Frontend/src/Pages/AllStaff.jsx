@@ -170,7 +170,7 @@ export default function AllStaff() {
       if (data.success) {
         setSuccessMessage("Staff updated successfully.");
         setIsUpdateModalOpen(false);
-        fetchAllStaff(); // Refresh staff records after update
+         // Refresh staff records after update
       } else {
         setErrorMessage("Failed to update staff.");
       }
@@ -194,30 +194,31 @@ export default function AllStaff() {
         }}
       >
         <div className="p-10 bg-gray-50 bg-opacity-75 rounded-lg">
-          <div className="p-6 flex flex-wrap justify-between gap-32">
-            <div className="p-6 bg-white rounded-lg shadow-md">
-              <h1 className="text-3xl font-cinzel font-semibold text-gray-800">
-                Welcome back,{" "}
-                <span className="bg-gradient-to-r from-purple-700 to-purple-900 text-transparent bg-clip-text font-normal">
-                  {currentUser.shopname}
-                </span>
-              </h1>
-              <div className="text-sm font-sans font-normal mt-5 space-y-2">
-                <h2 className="text-gray-700">
-                  Email{" "}
-                  <span className="text-gray-600 font-medium">
-                    : {currentUser.email}
-                  </span>
-                </h2>
-                <h2 className="text-gray-700">
-                  BR Number{" "}
-                  <span className="text-gray-600 font-medium">
-                    : {currentUser.brnumber}
-                  </span>
-                </h2>
-              </div>
-            </div>
-          </div>
+        <div className="p-8 flex flex-wrap justify-between gap-12">
+  <div className="p-8 bg-white rounded-xl shadow-lg border border-gray-200">
+    <h1 className="text-4xl font-cinzel font-bold text-gray-900">
+      Welcome back,{" "}
+      <span className="bg-gradient-to-r from-purple-600 to-purple-800 text-transparent bg-clip-text">
+        {currentUser.shopname}
+      </span>
+    </h1>
+    <div className="text-md font-sans font-light mt-6 space-y-4">
+      <h2 className="text-gray-600">
+        Email{" "}
+        <span className="text-gray-700 font-medium">
+          : {currentUser.email}
+        </span>
+      </h2>
+      <h2 className="text-gray-600">
+        BR Number{" "}
+        <span className="text-gray-700 font-medium">
+          : {currentUser.brnumber}
+        </span>
+      </h2>
+    </div>
+  </div>
+</div>
+
 
           <h1 className="text-xl px-10 pb-4 font-sans">Staff Records</h1>
           <Link to="/dashboard?tab=staff" className="p-10">
@@ -269,73 +270,129 @@ export default function AllStaff() {
 
           {/* Assign Job Modal */}
           <Modal
-            show={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          >
-            <Modal.Header>Assign Job</Modal.Header>
-            <Modal.Body>
-              <div className="flex flex-col">
-                <Label htmlFor="jobDescription">Job Description</Label>
-                <TextInput
-                  id="jobDescription"
-                  value={jobDescription}
-                  onChange={(e) => setJobDescription(e.target.value)}
-                />
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button onClick={handleSubmitJob} disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Assign"}
-              </Button>
-              <Button color="gray" onClick={() => setIsModalOpen(false)}>
-                Cancel
-              </Button>
-            </Modal.Footer>
-          </Modal>
+  show={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  className="rounded-lg shadow-lg border border-gray-200"
+>
+  <Modal.Header className="bg-blue-500 text-white text-center rounded-t-lg p-4">
+    <h3 className="text-xl font-semibold">Assign Job</h3>
+  </Modal.Header>
+  <Modal.Body className="p-6 bg-gray-50">
+    <div className="flex flex-col gap-4">
+      <Label htmlFor="jobDescription" className="text-lg font-medium text-gray-700">
+        Job Description
+      </Label>
+      <TextInput
+        id="jobDescription"
+        value={jobDescription}
+        onChange={(e) => setJobDescription(e.target.value)}
+        className="border-2 border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-md p-2 shadow-sm"
+        placeholder="Enter job description"
+      />
+    </div>
+  </Modal.Body>
+  <Modal.Footer className="bg-gray-100 flex justify-end gap-4 p-4 rounded-b-lg">
+    <Button
+      onClick={handleSubmitJob}
+      disabled={isSubmitting}
+      className={`bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 ease-in-out ${
+        isSubmitting
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:bg-blue-600 hover:shadow-lg"
+      }`}
+    >
+      
+      {isSubmitting ? "Submitting..." : "Assign"}
+    </Button>
+    <Button
+      color="gray"
+      onClick={() => setIsModalOpen(false)}
+      className="bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out"
+    >
+      Cancel
+    </Button>
+  </Modal.Footer>
+</Modal>
+
 
           {/* Update Staff Modal */}
           <Modal
-            show={isUpdateModalOpen}
-            onClose={() => setIsUpdateModalOpen(false)}
-          >
-            <Modal.Header>Update Staff</Modal.Header>
-            <Modal.Body>
-              <div className="flex flex-col">
-                <Label htmlFor="name">Name</Label>
-                <TextInput
-                  id="name"
-                  value={updatedStaffDetails.name}
-                  onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, name: e.target.value })}
-                />
-                <Label htmlFor="email">Email</Label>
-                <TextInput
-                  id="email"
-                  value={updatedStaffDetails.email}
-                  onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, email: e.target.value })}
-                />
-                <Label htmlFor="phone">Phone</Label>
-                <TextInput
-                  id="phone"
-                  value={updatedStaffDetails.phone}
-                  onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, phone: e.target.value })}
-                />
-                <Label htmlFor="age">Age</Label>
-                <TextInput
-                  id="age"
-                  value={updatedStaffDetails.age}
-                  onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, age: e.target.value })}
-                />
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button onClick={handleSubmitUpdate} disabled={isSubmitting}>
-                {isSubmitting ? "Updating..." : "Update"}
-              </Button>
-              <Button color="gray" onClick={() => setIsUpdateModalOpen(false)}>
-                Cancel
-              </Button>
-            </Modal.Footer>
-          </Modal>
+  show={isUpdateModalOpen}
+  onClose={() => setIsUpdateModalOpen(false)}
+  className="rounded-xl shadow-lg border border-gray-300"
+>
+  <Modal.Header className="bg-green-500 text-white rounded-t-xl p-4">
+    <h3 className="text-lg font-semibold text-center">Update Staff</h3>
+  </Modal.Header>
+  <Modal.Body className="p-6 bg-gray-50">
+    <div className="flex flex-col gap-5">
+      <Label htmlFor="name" className="text-md font-medium text-gray-700">
+        Name
+      </Label>
+      <TextInput
+        id="name"
+        value={updatedStaffDetails.name}
+        onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, name: e.target.value })}
+        className="border-2 border-green-400 rounded-md p-2 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm"
+        placeholder="Enter name"
+      />
+      
+      <Label htmlFor="email" className="text-md font-medium text-gray-700">
+        Email
+      </Label>
+      <TextInput
+        id="email"
+        value={updatedStaffDetails.email}
+        onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, email: e.target.value })}
+        className="border-2 border-green-400 rounded-md p-2 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm"
+        placeholder="Enter email"
+      />
+      
+      <Label htmlFor="phone" className="text-md font-medium text-gray-700">
+        Phone
+      </Label>
+      <TextInput
+        id="phone"
+        value={updatedStaffDetails.phone}
+        onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, phone: e.target.value })}
+        className="border-2 border-green-400 rounded-md p-2 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm"
+        placeholder="Enter phone number"
+      />
+      
+      <Label htmlFor="age" className="text-md font-medium text-gray-700">
+        Age
+      </Label>
+      <TextInput
+        id="age"
+        value={updatedStaffDetails.age}
+        onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, age: e.target.value })}
+        className="border-2 border-green-400 rounded-md p-2 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm"
+        placeholder="Enter age"
+      />
+    </div>
+  </Modal.Body>
+  <Modal.Footer className="bg-gray-100 flex justify-end gap-4 p-4 rounded-b-xl">
+    <Button
+      onClick={handleSubmitUpdate}
+      disabled={isSubmitting}
+      className={`bg-green-500 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition-all duration-300 ease-in-out ${
+        isSubmitting
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:bg-green-600 hover:shadow-lg"
+      }`}
+    >
+      {isSubmitting ? "Updating..." : "Update"}
+    </Button>
+    <Button
+      color="gray"
+      onClick={() => setIsUpdateModalOpen(false)}
+      className="bg-gray-400 text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out"
+    >
+      Cancel
+    </Button>
+  </Modal.Footer>
+</Modal>
+
         </div>
       </div>
     </>
