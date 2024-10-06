@@ -141,13 +141,7 @@ export default function Staff() {
 </div>
 
 
-            <div className="flex-1 lg:mt-0 lg:ml-10">
-              <img
-                src="/img/crowd.png"
-                alt="crowd-image"
-                className="max-w-full h-auto object-contain opacity-80"
-              />
-            </div>
+          
           </div>
         </div>
 

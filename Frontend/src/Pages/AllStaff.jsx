@@ -1,8 +1,9 @@
 import { Label, TextInput, Modal, Button } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import backgroundImage from '../Pages/Images/manageStaff.jpg';
+import { useReactToPrint } from 'react-to-print';
 
 export default function AllStaff() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function AllStaff() {
     phone: "",
     age: "",
   });
-
+  const componentPDF = useRef();
   // Fetch all staff data using useEffect
   useEffect(() => {
     const fetchAllStaff = async () => {
@@ -51,7 +52,18 @@ export default function AllStaff() {
     setSelectedStaff(staff);
     setIsModalOpen(true);
   };
-
+  const generatePDF = useReactToPrint({
+    content: () => componentPDF.current,
+    documentTitle: 'Total Item Report',
+    onBeforeGetContent: () => {
+        setIsGeneratingPDF(true);
+        return Promise.resolve();
+    },
+    onAfterPrint: () => {
+        setIsGeneratingPDF(false);
+        alert('Data saved in PDF');
+    }
+});
   const handleSubmitJob = async () => {
     if (!jobDescription.trim()) {
       setErrorMessage("Job description cannot be empty.");
@@ -71,7 +83,7 @@ export default function AllStaff() {
         }
       );
       const data = await res.json();
-
+alert("job assign successfully")
       if (data.success) {
         setSuccessMessage("Job assigned successfully.");
         setIsModalOpen(false);
@@ -102,6 +114,7 @@ export default function AllStaff() {
       if (data.success) {
         setSuccessMessage("Job removed successfully.");
         fetchAllStaff(); // Refresh staff records
+        alert("removed job successfully")
       } else {
         setErrorMessage("Failed to remove job.");
       }
@@ -124,10 +137,11 @@ export default function AllStaff() {
         }
       );
       const data = await res.json();
-
+      alert("staff memeber removed successfully")
       if (data.success) {
         setSuccessMessage("Staff removed successfully.");
         fetchAllStaff(); // Refresh staff records
+        alert("staff memeber removed successfully")
       } else {
         setErrorMessage("Failed to remove staff member.");
       }
@@ -170,6 +184,7 @@ export default function AllStaff() {
       if (data.success) {
         setSuccessMessage("Staff updated successfully.");
         setIsUpdateModalOpen(false);
+        alert("updated successfully")
          // Refresh staff records after update
       } else {
         setErrorMessage("Failed to update staff.");
@@ -219,7 +234,7 @@ export default function AllStaff() {
   </div>
 </div>
 
-
+<div ref={componentPDF} style={{ width: '100%' }}>
           <h1 className="text-xl px-10 pb-4 font-sans">Staff Records</h1>
           <Link to="/dashboard?tab=staff" className="p-10">
             <button className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300">
@@ -267,7 +282,7 @@ export default function AllStaff() {
               </div>
             ))}
           </div>
-
+          </div>
           {/* Assign Job Modal */}
           <Modal
   show={isModalOpen}
