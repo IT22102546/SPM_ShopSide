@@ -358,7 +358,7 @@ export const removeStaff = async (req, res, next) => {
     const { email, password } = req.body;
   
     if (!email || !password) {
-        return next(errorHandler(400, 'Please provide both Business Registration Number and password.'));
+        return next(errorHandler(400, 'Please provide email and password.'));
     }
   
     try {
@@ -370,7 +370,7 @@ export const removeStaff = async (req, res, next) => {
   
         if (staffemail.empty) {
             console.log('User not found with BR Number:', email); 
-            return next(errorHandler(404, 'User with the provided Business Registration Number not found.'));
+            return next(errorHandler(404, 'User with the email not found.'));
         }
   
         
@@ -379,7 +379,7 @@ export const removeStaff = async (req, res, next) => {
   
      
         if (password !== userData.password) {
-            console.log('Password mismatch for BR Number:', email); 
+            console.log('Password mismatch for email:', email); 
             return next(errorHandler(401, 'Invalid credentials.'));
         }
   

@@ -22,6 +22,7 @@ export default function App() {
 
         <Route element={<PrivateRoute/>}/>
           <Route path="/dashboard" element={<DashBoard/>}/> 
+
         <Route/>
 
         <Route path='/create-record-crowd' element={<CreateCrowdRecord/>}></Route>

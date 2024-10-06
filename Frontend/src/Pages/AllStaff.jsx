@@ -2,6 +2,7 @@ import { Label, TextInput, Modal, Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import backgroundImage from '../Pages/Images/manageStaff.jpg';
 
 export default function AllStaff() {
   const navigate = useNavigate();
@@ -27,11 +28,8 @@ export default function AllStaff() {
   useEffect(() => {
     const fetchAllStaff = async () => {
       try {
-        const res = await fetch(
-          `/api/staff/getAllStaff/${currentUser.brnumber}`
-        );
+        const res = await fetch(`/api/staff/getAllStaff/${currentUser.brnumber}`);
         const data = await res.json();
-
         if (data.success) {
           setStaffRecords(data.staff); // Set the fetched staff records
         } else {
@@ -141,22 +139,6 @@ export default function AllStaff() {
     }
   };
 
-  // Function to fetch all staff (can be reused to refresh staff data)
-  const fetchAllStaff = async () => {
-    try {
-      const res = await fetch(`/api/staff/getAllStaff/${currentUser.brnumber}`);
-      const data = await res.json();
-      if (data.success) {
-        setStaffRecords(data.staff);
-      } else {
-        setErrorMessage("Failed to fetch staff records");
-      }
-    } catch (error) {
-      console.error("Error fetching staff records:", error);
-      setErrorMessage("Failed to fetch staff records");
-    }
-  };
-
   // Open the update staff modal and pre-fill staff details
   const handleUpdateStaffClick = (staff) => {
     setSelectedStaff(staff);
@@ -202,234 +184,160 @@ export default function AllStaff() {
 
   return (
     <>
-      <div className="bg-gray-100 w-full">
-        <div className="p-10 bg-gray-50 flex flex-wrap justify-between gap-32">
-          <div>
-            <h1 className="text-2xl font-cinzel font-semibold">
-              Welcome back!,{" "}
-              <span className="text-gradient-to-r from-purple-700 to-purple-900 font-normal">
-                {currentUser.shopname}
-              </span>
-              <br />
-              <div className="text-sm font-sans font-normal mt-5">
-                <h1>
-                  Shop ID{" "}
-                  <span className="text-gray-600 font-normal mx-10">
-                    : {currentUser.shopID}
-                  </span>
-                </h1>
-                <h1>
+      <div
+        className="bg-gray-100 w-full"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          // Make sure the background covers the full viewport height
+        }}
+      >
+        <div className="p-10 bg-gray-50 bg-opacity-75 rounded-lg">
+          <div className="p-6 flex flex-wrap justify-between gap-32">
+            <div className="p-6 bg-white rounded-lg shadow-md">
+              <h1 className="text-3xl font-cinzel font-semibold text-gray-800">
+                Welcome back,{" "}
+                <span className="bg-gradient-to-r from-purple-700 to-purple-900 text-transparent bg-clip-text font-normal">
+                  {currentUser.shopname}
+                </span>
+              </h1>
+              <div className="text-sm font-sans font-normal mt-5 space-y-2">
+                <h2 className="text-gray-700">
                   Email{" "}
-                  <span className="text-gray-600 font-normal mx-14">
+                  <span className="text-gray-600 font-medium">
                     : {currentUser.email}
                   </span>
-                </h1>
-                <h1>
+                </h2>
+                <h2 className="text-gray-700">
                   BR Number{" "}
-                  <span className="text-gray-600 font-normal mx-4">
+                  <span className="text-gray-600 font-medium">
                     : {currentUser.brnumber}
                   </span>
-                </h1>
-              </div>
-            </h1>
-          </div>
-        </div>
-
-        <h1 className="text-xl px-10 pb-4 font-sans">Staff Records</h1>
-        <Link to="/dashboard?tab=staff" className="p-10">
-          <button className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300">
-            Return
-          </button>
-        </Link>
-
-        <div className="p-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {staffRecords.map((staff) => (
-            <div key={staff.id} className="bg-white p-5 rounded-lg shadow-md">
-              <h2 className="text-lg font-semibold">{staff.name}</h2>
-              <p>Email: {staff.email}</p>
-              <p>Gender: {staff.gender}</p>
-              <p>Phone: {staff.phone}</p>
-              <p>Age: {staff.age} yrs</p>
-              <p>Assigned Job: {staff.jobDescription}</p>
-              <div className="flex justify-between mt-3">
-                <button
-                  className="p-1 px-2 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-100"
-                  onClick={() => handleAssignJobClick(staff)}
-                >
-                  Assign Job
-                </button>
-                <button
-                  className="p-1 px-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-100"
-                  onClick={() => handleRemoveJobClick(staff)}
-                >
-                  Remove Job
-                </button>
-              </div>
-              <div className="flex justify-between mt-3">
-                <button
-                  className="p-1 px-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition duration-100"
-                  onClick={() => handleUpdateStaffClick(staff)}
-                >
-                  Update
-                </button>
-                <button
-                  className="p-1 px-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-100"
-                  onClick={() => handleRemoveStaff(staff)}
-                >
-                  Remove
-                </button>
+                </h2>
               </div>
             </div>
-          ))}
+          </div>
+
+          <h1 className="text-xl px-10 pb-4 font-sans">Staff Records</h1>
+          <Link to="/dashboard?tab=staff" className="p-10">
+            <button className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300">
+              Return
+            </button>
+          </Link>
+
+          <div className="p-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {staffRecords.map((staff) => (
+              <div key={staff.id} className="bg-white p-5 rounded-lg shadow-md">
+                <h2 className="text-lg font-semibold">{staff.name}</h2>
+                <p>Email: {staff.email}</p>
+                <p>Gender: {staff.gender}</p>
+                <p>Phone: {staff.phone}</p>
+                <p>Age: {staff.age} yrs</p>
+                <p>Assigned Job: {staff.jobDescription}</p>
+                <div className="flex justify-between mt-3">
+                  <button
+                    className="p-1 px-2 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-100"
+                    onClick={() => handleAssignJobClick(staff)}
+                  >
+                    Assign Job
+                  </button>
+                  <button
+                    className="p-1 px-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-100"
+                    onClick={() => handleRemoveJobClick(staff)}
+                  >
+                    Remove Job
+                  </button>
+                </div>
+                <div className="flex justify-between mt-3">
+                  <button
+                    className="p-1 px-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition duration-100"
+                    onClick={() => handleUpdateStaffClick(staff)}
+                  >
+                    Update
+                  </button>
+                  <button
+                    className="p-1 px-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-100"
+                    onClick={() => handleRemoveStaff(staff)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Assign Job Modal */}
+          <Modal
+            show={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          >
+            <Modal.Header>Assign Job</Modal.Header>
+            <Modal.Body>
+              <div className="flex flex-col">
+                <Label htmlFor="jobDescription">Job Description</Label>
+                <TextInput
+                  id="jobDescription"
+                  value={jobDescription}
+                  onChange={(e) => setJobDescription(e.target.value)}
+                />
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={handleSubmitJob} disabled={isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Assign"}
+              </Button>
+              <Button color="gray" onClick={() => setIsModalOpen(false)}>
+                Cancel
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* Update Staff Modal */}
+          <Modal
+            show={isUpdateModalOpen}
+            onClose={() => setIsUpdateModalOpen(false)}
+          >
+            <Modal.Header>Update Staff</Modal.Header>
+            <Modal.Body>
+              <div className="flex flex-col">
+                <Label htmlFor="name">Name</Label>
+                <TextInput
+                  id="name"
+                  value={updatedStaffDetails.name}
+                  onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, name: e.target.value })}
+                />
+                <Label htmlFor="email">Email</Label>
+                <TextInput
+                  id="email"
+                  value={updatedStaffDetails.email}
+                  onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, email: e.target.value })}
+                />
+                <Label htmlFor="phone">Phone</Label>
+                <TextInput
+                  id="phone"
+                  value={updatedStaffDetails.phone}
+                  onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, phone: e.target.value })}
+                />
+                <Label htmlFor="age">Age</Label>
+                <TextInput
+                  id="age"
+                  value={updatedStaffDetails.age}
+                  onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, age: e.target.value })}
+                />
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={handleSubmitUpdate} disabled={isSubmitting}>
+                {isSubmitting ? "Updating..." : "Update"}
+              </Button>
+              <Button color="gray" onClick={() => setIsUpdateModalOpen(false)}>
+                Cancel
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       </div>
-
-      {/* Modal to assign a job */}
-      <Modal 
-  show={isModalOpen} 
-  onClose={() => setIsModalOpen(false)} 
-  className="rounded-lg shadow-lg transition-all duration-300 ease-in-out transform scale-105"
->
-  <Modal.Header className="text-lg font-bold text-white bg-blue-600 rounded-t-lg p-4 shadow-md">
-    Assign Job to {selectedStaff?.name}
-  </Modal.Header>
-  <Modal.Body className="bg-gray-50 p-6 space-y-6">
-    <div>
-      <Label 
-        htmlFor="jobDescription" 
-        className="text-sm font-semibold text-gray-600"
-      >
-        Job Description
-      </Label>
-      <TextInput
-        id="jobDescription"
-        type="text"
-        className="border-2 border-blue-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        placeholder="Enter job description"
-        value={jobDescription}
-        onChange={(e) => setJobDescription(e.target.value)}
-      />
-    </div>
-  </Modal.Body>
-  <Modal.Footer className="flex justify-between bg-gray-100 p-4 rounded-b-lg">
-    <Button 
-      onClick={handleSubmitJob} 
-      disabled={isSubmitting} 
-      className={`bg-blue-600 text-white p-2 px-4 rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-    >
-      {isSubmitting ? "Assigning..." : "Assign"}
-    </Button>
-    <Button 
-      color="gray" 
-      className="text-gray-600 hover:text-gray-900 hover:bg-gray-200 p-2 rounded-lg transition duration-150 ease-in-out"
-      onClick={() => setIsModalOpen(false)}
-    >
-      Cancel
-    </Button>
-  </Modal.Footer>
-</Modal>
-
-{/* Update Staff Modal */}
-<Modal 
-  show={isUpdateModalOpen} 
-  onClose={() => setIsUpdateModalOpen(false)} 
-  className="rounded-lg shadow-lg transition-all duration-300 ease-in-out transform scale-105"
->
-  <Modal.Header className="text-lg font-bold text-white bg-green-600 rounded-t-lg p-4 shadow-md">
-    Update Staff Details for {selectedStaff?.name}
-  </Modal.Header>
-  <Modal.Body className="bg-gray-50 p-6 space-y-6">
-    <div>
-      <Label htmlFor="staffName" className="text-sm font-semibold text-gray-600">
-        Name
-      </Label>
-      <TextInput
-        id="staffName"
-        type="text"
-        className="border-2 border-green-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-        placeholder="Enter staff name"
-        value={updatedStaffDetails.name}
-        onChange={(e) =>
-          setUpdatedStaffDetails((prevDetails) => ({
-            ...prevDetails,
-            name: e.target.value,
-          }))
-        }
-      />
-    </div>
-    <div>
-      <Label htmlFor="staffEmail" className="text-sm font-semibold text-gray-600">
-        Email
-      </Label>
-      <TextInput
-        id="staffEmail"
-        type="email"
-        className="border-2 border-green-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-        placeholder="Enter staff email"
-        value={updatedStaffDetails.email}
-        onChange={(e) =>
-          setUpdatedStaffDetails((prevDetails) => ({
-            ...prevDetails,
-            email: e.target.value,
-          }))
-        }
-      />
-    </div>
-    <div>
-      <Label htmlFor="staffPhone" className="text-sm font-semibold text-gray-600">
-        Phone
-      </Label>
-      <TextInput
-        id="staffPhone"
-        type="text"
-        className="border-2 border-green-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-        placeholder="Enter staff phone"
-        value={updatedStaffDetails.phone}
-        onChange={(e) =>
-          setUpdatedStaffDetails((prevDetails) => ({
-            ...prevDetails,
-            phone: e.target.value,
-          }))
-        }
-      />
-    </div>
-    <div>
-      <Label htmlFor="staffAge" className="text-sm font-semibold text-gray-600">
-        Age
-      </Label>
-      <TextInput
-        id="staffAge"
-        type="number"
-        className="border-2 border-green-400 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-        placeholder="Enter staff age"
-        value={updatedStaffDetails.age}
-        onChange={(e) =>
-          setUpdatedStaffDetails((prevDetails) => ({
-            ...prevDetails,
-            age: e.target.value,
-          }))
-        }
-      />
-    </div>
-  </Modal.Body>
-  <Modal.Footer className="flex justify-between bg-gray-100 p-4 rounded-b-lg">
-    <Button 
-      onClick={handleSubmitUpdate} 
-      disabled={isSubmitting} 
-      className={`bg-green-600 text-white p-2 px-4 rounded-lg hover:bg-green-700 transition duration-150 ease-in-out ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-    >
-      {isSubmitting ? "Updating..." : "Update"}
-    </Button>
-    <Button 
-      color="gray" 
-      className="text-gray-600 hover:text-gray-900 hover:bg-gray-200 p-2 rounded-lg transition duration-150 ease-in-out"
-      onClick={() => setIsUpdateModalOpen(false)}
-    >
-      Cancel
-    </Button>
-  </Modal.Footer>
-</Modal>
-
     </>
   );
 }

@@ -2,6 +2,7 @@ import { Label, TextInput, Table, Modal, Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import logo from '../Pages/Images/staffMember.jpg'
 
 export default function AllTaskToStaff() {
   const navigate = useNavigate();
@@ -27,9 +28,7 @@ export default function AllTaskToStaff() {
   useEffect(() => {
     const fetchAllStaff = async () => {
       try {
-        const res = await fetch(
-          `/api/staff/getAllStaff`
-        );
+        const res = await fetch(`/api/staff/getAllStaff`);
         const data = await res.json();
 
         if (data.success) {
@@ -43,10 +42,8 @@ export default function AllTaskToStaff() {
       }
     };
 
-   
-      fetchAllStaff();
-    
-  },);
+    fetchAllStaff();
+  }, []);
 
   // Handle assigning job (already exists in your code)
   const handleAssignJobClick = (staff) => {
@@ -88,21 +85,6 @@ export default function AllTaskToStaff() {
       setErrorMessage("Failed to assign job.");
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const fetchAllStaff = async () => {
-    try {
-      const res = await fetch(`/api/staff/getAllStaff`);
-      const data = await res.json();
-      if (data.success) {
-        setStaffRecords(data.staff);
-      } else {
-        setErrorMessage("Failed to fetch staff records");
-      }
-    } catch (error) {
-      console.error("Error fetching staff records:", error);
-      setErrorMessage("Failed to fetch staff records");
     }
   };
 
@@ -151,53 +133,50 @@ export default function AllTaskToStaff() {
 
   return (
     <>
-      <div className="bg-gray-100 w-full">
-       
-        <h1 className="text-xl px-10 pb-4 font-sans">Staff Records</h1>
-        <Link to='/' className="p-10">
-        
+      <div className="bg-cover bg-center min-h-screen" style={{ backgroundImage: `url(${logo})` }}>
+        <div className="bg-black bg-opacity-50 min-h-screen py-10">
+          <h1 className="text-3xl text-white px-10 pb-4 font-sans">Staff Records</h1>
+          <Link to='/' className="p-10">
             <button
-            className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-
+              className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
             >
-            Log Out
+              Log Out
             </button>
-        </Link>
-        <div className="p-10">
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-          <Table>
-            <Table.Head className="text-center">
-              <Table.HeadCell>Name</Table.HeadCell>
-              <Table.HeadCell>Email</Table.HeadCell>
-              <Table.HeadCell>Gender</Table.HeadCell>
-              <Table.HeadCell>Phone</Table.HeadCell>
-              <Table.HeadCell>Age</Table.HeadCell>
-              <Table.HeadCell>Assigned Job</Table.HeadCell>
-              <Table.HeadCell>Status</Table.HeadCell>
-            </Table.Head>
-            <Table.Body>
-              {staffRecords.map((staff) => (
-                <Table.Row key={staff.id} className="text-center">
-                  <Table.Cell>{staff.name}</Table.Cell>
-                  <Table.Cell>{staff.email}</Table.Cell>
-                  <Table.Cell>{staff.gender}</Table.Cell>
-                  <Table.Cell>{staff.phone}</Table.Cell>
-                  <Table.Cell>{staff.age} yrs</Table.Cell>
-                  <Table.Cell>{staff.jobDescription}</Table.Cell>
-                  <Table.Cell>
-                   
-                    <button
-                      className="mx-1 p-2 px-3 rounded-lg bg-gradient-to-r from-green-700 to-green-900 text-white hover:bg-gradient-to-r hover:from-green-700 hover:to-green-800 transition duration-300"
-                      onClick={() => handleUpdateStaffClick(staff) }
-                    >
-                      Complete
-                    </button>
-                  
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
+          </Link>
+          <div className="p-40">
+            {errorMessage && <p className="text-red-700">{errorMessage}</p>}
+            <Table>
+              <Table.Head className="text-center">
+                <Table.HeadCell>Name</Table.HeadCell>
+                <Table.HeadCell>Email</Table.HeadCell>
+                <Table.HeadCell>Gender</Table.HeadCell>
+                <Table.HeadCell>Phone</Table.HeadCell>
+                <Table.HeadCell>Age</Table.HeadCell>
+                <Table.HeadCell>Assigned Job</Table.HeadCell>
+                <Table.HeadCell>Status</Table.HeadCell>
+              </Table.Head>
+              <Table.Body>
+                {staffRecords.map((staff) => (
+                  <Table.Row key={staff.id} className="text-center">
+                    <Table.Cell className="text-white">{staff.name}</Table.Cell>
+                    <Table.Cell className="text-white">{staff.email}</Table.Cell>
+                    <Table.Cell className="text-white">{staff.gender}</Table.Cell>
+                    <Table.Cell className="text-white">{staff.phone}</Table.Cell>
+                    <Table.Cell className="text-white">{staff.age} yrs</Table.Cell>
+                    <Table.Cell className="text-white">{staff.jobDescription}</Table.Cell>
+                    <Table.Cell>
+                      <button
+                        className="mx-1 p-2 px-3 rounded-lg bg-gradient-to-r from-green-700 to-green-900 text-white hover:bg-gradient-to-r hover:from-green-700 hover:to-green-800 transition duration-300"
+                        onClick={() => handleUpdateStaffClick(staff)}
+                      >
+                        Assign Completed
+                      </button>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </div>
         </div>
       </div>
 
@@ -256,46 +235,46 @@ export default function AllTaskToStaff() {
               id="staff-name"
               value={updatedStaffDetails.name}
               onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, name: e.target.value })}
-              required
             />
+          </div>
+          <div>
             <Label htmlFor="staff-email" value="Email" />
             <TextInput
               id="staff-email"
               type="email"
               value={updatedStaffDetails.email}
               onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, email: e.target.value })}
-              required
             />
+          </div>
+          <div>
             <Label htmlFor="staff-phone" value="Phone" />
             <TextInput
               id="staff-phone"
+              type="tel"
               value={updatedStaffDetails.phone}
-              readOnly // Read-only since we don't want to change the phone
+              onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, phone: e.target.value })}
             />
+          </div>
+          <div>
             <Label htmlFor="staff-age" value="Age" />
             <TextInput
               id="staff-age"
+              type="number"
               value={updatedStaffDetails.age}
               onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, age: e.target.value })}
-              required
             />
-            {errorMessage && (
-              <p className="text-red-500">{errorMessage}</p>
-            )}
+          </div>
+          <div className="flex justify-end">
+            <Button
+              onClick={handleSubmitUpdate}
+              className="mr-2"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Updating..." : "Update"}
+            </Button>
+            <Button onClick={() => setIsUpdateModalOpen(false)}>Cancel</Button>
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button
-            disabled={isSubmitting}
-            onClick={handleSubmitUpdate}
-            className="p-1 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-          >
-            {isSubmitting ? "Updating..." : "Update"}
-          </Button>
-          <Button color="gray" onClick={() => setIsUpdateModalOpen(false)}>
-            Cancel
-          </Button>
-        </Modal.Footer>
       </Modal> */}
     </>
   );
