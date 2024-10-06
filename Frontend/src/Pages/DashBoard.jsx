@@ -4,6 +4,7 @@ import DashSideBar from "../Components/DashSideBar";
 import DashProfile from "../Components/DashProfile";
 import Crowd from "./Crowd";
 import Staff from "./Staff";
+import DashProduct from "../Components/DashProducts";
 
 
 export default function DashBoard() {
@@ -26,6 +27,7 @@ export default function DashBoard() {
       {tab==='profile' && <DashProfile/>}
       {tab === 'crowd' && <Crowd/>}
       {tab === 'staff' && <Staff/>}
+      {tab === 'products' && <DashProduct/>}
 
     </div>
   )

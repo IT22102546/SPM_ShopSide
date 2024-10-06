@@ -3,7 +3,7 @@ import { Alert, Button, Modal, TextInput } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOut, updateUserFailure, updateUserStart, updateUserSuccess } from "../redux/user/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from '../Pages/Images/home.jpg'
 
 export default function DashProfile() {
@@ -146,15 +146,22 @@ export default function DashProfile() {
           >
             {loading ? "Loading.." : "Update Account"}
           </Button>
+         <Link to="/addcategory">
+          <Button type="button" gradientDuoTone="purpleToBlue" className="w-full bg-slate-400 text-black" outline>
+              Add New Category
+          </Button>
+        </Link> 
+        <Link to="/addproducts">
           <Button
             type="button"
             gradientDuoTone="purpleToBlue"
             className="w-full bg-slate-400 text-black rounded-lg"
             outline
           >
-            Manage Shop
-          </Button>
-        </form>
+                Add Products
+            </Button>
+          </Link> 
+      </form>
         <div className="text-red-500 flex justify-between mt-5">
           <span onClick={() => setShowModel(true)} className="cursor-pointer">
             Delete Account
