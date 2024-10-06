@@ -1,128 +1,121 @@
-import { Table } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-export default function CrowdStatistics() {
-  const { currentUser, loading1 } = useSelector((state) => state.user); // Redux state for user
+// Register chart components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+export default function HourlyCrowdReport() {
   const [crowdStats, setCrowdStats] = useState([]); // State to hold crowd statistics
-  const [loading, setLoading] = useState(true); // State for loading state
-  const [error, setError] = useState(null); // State for handling errors
+  const [loading, setLoading] = useState(true); // State for loading
+  const [error, setError] = useState(null); // State for errors
 
-  // Function to fetch crowd statistics
+  // Function to fetch crowd statistics (replace with your actual fetch logic)
   const fetchCrowdStatistics = async () => {
     try {
-      setLoading(true); // Start loading when refetching
-      const res = await fetch(
-        `/api/crowd/crowd-statistics/${currentUser.brnumber}`
-      );
+      setLoading(true); 
+      // Simulated API call (replace this with your actual API call)
+      const res = await fetch('/api/crowd/crowd-statistics/your-shop-id');
       const data = await res.json();
 
-      console.log(data); // Log the API response for debugging
-
       if (data.success && Array.isArray(data.crowdStatistics)) {
-        setCrowdStats(data.crowdStatistics); // Set the fetched crowd statistics
+        setCrowdStats(data.crowdStatistics);
       } else {
-        setCrowdStats([]); // Ensure it's set to an empty array if no data is found
+        setCrowdStats([]);
         setError("Failed to fetch crowd statistics");
       }
     } catch (error) {
-      console.error("Error fetching crowd statistics:", error);
-      setError("Failed to fetch crowd statistics"); // Set error message
-      setCrowdStats([]); // Set crowdStats to an empty array on error
+      setError("Failed to fetch crowd statistics");
+      setCrowdStats([]);
     } finally {
-      setLoading(false); // Set loading to false after the request
+      setLoading(false);
     }
   };
 
-  // UseEffect to fetch crowd statistics when the component first loads
+  // UseEffect to fetch crowd statistics on component mount
   useEffect(() => {
-    if (currentUser?.brnumber) {
-      fetchCrowdStatistics(); // Fetch crowd statistics if the brnumber is provided
-    }
-  }, [currentUser]);
+    fetchCrowdStatistics(); // Fetch crowd statistics
+  }, []);
 
-  if (loading1 || loading) {
-    return <div>Loading...</div>; // Show loading if user or data is still being fetched
+  // Helper function to aggregate data by hour
+  const aggregateDataByHour = () => {
+    const hourlyData = {};
+
+    crowdStats.forEach((report) => {
+      const date = new Date(report.timestamp._seconds * 1000); // Convert timestamp to JS Date
+      const hour = date.getHours(); // Extract hour from the date (0 to 23)
+
+      // Initialize the hour if not already in the object
+      if (!hourlyData[hour]) {
+        hourlyData[hour] = 0;
+      }
+
+      // Add the crowd count to the appropriate hour
+      hourlyData[hour] += report.previousCrowdCount;
+    });
+
+    return hourlyData;
+  };
+
+  // Aggregated hourly data
+  const hourlyData = aggregateDataByHour();
+
+  // Prepare data for the Bar chart
+  const chartData = {
+    labels: Object.keys(hourlyData).map((hour) => `${hour}:00`), // Labels (hours)
+    datasets: [
+      {
+        label: 'Number of People',
+        data: Object.values(hourlyData), // Crowd count for each hour
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Hourly Crowd Report',
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Hour of the Day',
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Number of People',
+        },
+        beginAtZero: true, // Start y-axis at 0
+      },
+    },
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>; // Show error message if there was an error fetching data
+    return <div>Error: {error}</div>;
   }
 
   return (
-    <div className="bg-gray-100 w-full">
-      <div className="p-10 bg-gray-50 flex flex-wrap justify-between gap-32">
-        <div>
-          <h1 className="text-2xl font-cinzel font-semibold">
-            Welcome back!,{" "}
-            <span className="text-gradient-to-r from-purple-700 to-purple-900 font-normal">
-              {currentUser.shopname}
-            </span>
-            <br />
-            <div className="text-sm font-sans font-normal mt-5">
-              <h1>
-                Shop ID{" "}
-                <span className="text-gray-600 font-normal mx-10">
-                  : {currentUser.shopID}
-                </span>
-              </h1>
-              <h1>
-                Email{" "}
-                <span className="text-gray-600 font-normal mx-14">
-                  : {currentUser.email}
-                </span>
-              </h1>
-              <h1>
-                BR Number{" "}
-                <span className="text-gray-600 font-normal mx-4">
-                  : {currentUser.brnumber}
-                </span>
-              </h1>
-            </div>
-          </h1>
-        </div>
-      </div>
-
-      <div className="p-10">
-        <div className="flex flex-col lg:flex-row lg:justify-between items-start gap-5">
-          <div className="flex-1">
-            <div>
-              <h1 className="text-xl font-semibold">Store Crowd Statistics</h1> <br />
-              {/* Refresh Button */}
-              <button
-                className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-                onClick={fetchCrowdStatistics} // Trigger data fetch when the button is clicked
-              >
-                Refresh
-              </button>
-            </div>
-            <div className="mt-2 flex flex-wrap justify-start gap-5">
-              {/* Display Crowd Statistics */}
-              {Array.isArray(crowdStats) && crowdStats.length > 0 ? (
-                <Table striped={true}>
-                  <Table.Head>
-                    <Table.HeadCell>Timestamp</Table.HeadCell>
-                    <Table.HeadCell>Previous Crowd Count</Table.HeadCell>
-                  </Table.Head>
-                  <Table.Body className="divide-y">
-                    {crowdStats.map((report) => (
-                      <Table.Row key={report.id} className="bg-white">
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
-                          {new Date(
-                            report.timestamp._seconds * 1000
-                          ).toLocaleString()}
-                        </Table.Cell>
-                        <Table.Cell>{report.previousCrowdCount}</Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </Table>
-              ) : (
-                <p>No crowd statistics available for this shop.</p>
-              )}
-            </div>
-          </div>
-        </div>
+    <div className="bg-gray-100 w-full p-10">
+      <h1 className="text-2xl font-semibold">Hourly Crowd Report</h1>
+      {/* Bar Chart for Hourly Crowd Report */}
+      <div className="mt-5">
+        <Bar data={chartData} options={options} />
       </div>
     </div>
   );
