@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOut, updateUserFailure, updateUserStart, updateUserSuccess } from "../redux/user/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
+import logo from '../Pages/Images/home.jpg'
 
 export default function DashProfile() {
   const dispatch = useDispatch();
@@ -98,62 +99,89 @@ export default function DashProfile() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-3 w-full">
-      <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <TextInput
-          type="text"
-          id="shopname"
-          placeholder="Shop Name"
-          value={formData.shopname || currentUser.shopname || ''}
-          onChange={handleChange}
-        />
-        <TextInput
-          type="email"
-          id="email"
-          placeholder="Email"
-          value={formData.email || currentUser.email || ''}
-          onChange={handleChange}
-        />
-        <TextInput
-          type="text"
-          id="brnumber"
-          placeholder="Business Registration Number"
-          value={formData.brnumber || currentUser.brnumber || ''}
-          onChange={handleChange}
-          readOnly
-        />
-        <Button type="submit" gradientDuoTone="purpleToBlue" outline className="bg-slate-400 text-black" disabled={loading}>
-          {loading ? "Loading.." : "Update Account"}
-        </Button>
-       <Link to="/addcategory">
+    <div
+      className="relative flex justify-center items-center min-h-screen w-full bg-cover bg-center"
+      style={{ backgroundImage: `url(${logo})` }}
+    >
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+
+      {/* Profile content */}
+      <div className="relative z-10 bg-white bg-opacity-90 p-8 rounded-lg shadow-xl w-full max-w-lg mx-auto">
+        <h1 className="my-7 text-center font-semibold text-3xl text-gray-800">
+          Profile
+        </h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <TextInput
+            type="text"
+            id="shopname"
+            placeholder="Shop Name"
+            value={formData.shopname || currentUser.shopname || ""}
+            onChange={handleChange}
+            className="rounded-lg"
+          />
+          <TextInput
+            type="email"
+            id="email"
+            placeholder="Email"
+            value={formData.email || currentUser.email || ""}
+            onChange={handleChange}
+            className="rounded-lg"
+          />
+          <TextInput
+            type="text"
+            id="brnumber"
+            placeholder="Business Registration Number"
+            value={formData.brnumber || currentUser.brnumber || ""}
+            onChange={handleChange}
+            readOnly
+            className="rounded-lg"
+          />
+          <Button
+            type="submit"
+            gradientDuoTone="purpleToBlue"
+            outline
+            className="bg-slate-400 text-black rounded-lg"
+            disabled={loading}
+          >
+            {loading ? "Loading.." : "Update Account"}
+          </Button>
+         <Link to="/addcategory">
           <Button type="button" gradientDuoTone="purpleToBlue" className="w-full bg-slate-400 text-black" outline>
               Add New Category
           </Button>
         </Link> 
         <Link to="/addproducts">
-          <Button type="button" gradientDuoTone="purpleToBlue" className="w-full bg-slate-400 text-black" outline>
-              Add Products
-          </Button>
-        </Link> 
+          <Button
+            type="button"
+            gradientDuoTone="purpleToBlue"
+            className="w-full bg-slate-400 text-black rounded-lg"
+            outline
+          >
+                Add Products
+            </Button>
+          </Link> 
       </form>
-      <div className="text-red-500 flex justify-between mt-5">
-        <span onClick={() => setShowModel(true)} className="cursor-pointer">
-          Delete Account
-        </span>
-        <span onClick={handleSignOut} className="cursor-pointer">
-          Sign Out
-        </span>
+        <div className="text-red-500 flex justify-between mt-5">
+          <span onClick={() => setShowModel(true)} className="cursor-pointer">
+            Delete Account
+          </span>
+          <span onClick={handleSignOut} className="cursor-pointer">
+            Sign Out
+          </span>
+        </div>
+        {updateSuccess && <Alert color="success" className="mt-5">{updateSuccess}</Alert>}
+        {updateUserError && <Alert color="failure" className="mt-5">{updateUserError}</Alert>}
       </div>
-      {updateSuccess && <Alert color="success" className="mt-5">{updateSuccess}</Alert>}
-      {updateUserError && <Alert color="failure" className="mt-5">{updateUserError}</Alert>}
+
+      {/* Modal */}
       <Modal show={showModel} onClose={() => setShowModel(false)} popup size="md">
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
             <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-200">
-              Are you sure you want to Delete your Account
+              Are you sure you want to Delete your Account?
             </h3>
           </div>
           <div className="flex justify-center gap-4">

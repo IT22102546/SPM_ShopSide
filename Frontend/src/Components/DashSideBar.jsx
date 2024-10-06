@@ -34,63 +34,73 @@ export default function DashSideBar() {
   };
 
   return (
-    <Sidebar className="w-full md:w-56">
-      <Sidebar.Items>
-        <Sidebar.ItemGroup>
-          <Link to='/dashboard?tab=profile' key="profile">
-            <Sidebar.Item 
-              active={tab === 'profile'} 
-              icon={HiUser} 
-              label={currentUser?.isAdmin ? 'Admin' : 'User'} 
-              labelColor='dark'
-              as='div'
-            >
-              Profile
-            </Sidebar.Item>
-          </Link>
+    <Sidebar className="w-full md:w-56 bg-gray-900 text-white h-full shadow-lg rounded-lg transition-transform duration-300 ease-in-out p-1.5">
+  <Sidebar.Items>
+    <Sidebar.ItemGroup>
 
+      <Link to='/dashboard?tab=profile' key="profile">
+        <Sidebar.Item 
+          active={tab === 'profile'} 
+          icon={HiUser} 
+          label={currentUser?.isAdmin ? 'Admin' : 'User'} 
+          labelColor='light'
+          className={`hover:bg-gray-700 hover:text-white transition-all duration-200 ease-in-out 
+                      ${tab === 'profile' ? 'bg-blue-500 text-white shadow-md scale-105' : ''} p-4 mb-4`}
+          as='div'
+        >
+          Profile
+        </Sidebar.Item>
+      </Link>
 
-              <Link to='/dashboard?tab=products' key="products">
-                <Sidebar.Item
-                  active={tab === 'products'}
-                  icon={HiGift}
-                  as='div'
-                >
-                  Products
-                </Sidebar.Item>
-              </Link>
+      <Link to='/dashboard?tab=products' key="products">
+        <Sidebar.Item
+          active={tab === 'products'}
+          icon={HiGift}
+          className={`hover:bg-gray-700 hover:text-white transition-all duration-200 ease-in-out 
+                      ${tab === 'products' ? 'bg-blue-500 text-white shadow-md scale-105' : ''} p-4 mb-4`}
+          as='div'
+        >
+          Products
+        </Sidebar.Item>
+      </Link>
 
-              <Link to='/dashboard?tab=crowd' key="crowd">
-                <Sidebar.Item
-                  active={tab === 'crowd'}
-                  icon={HiUserGroup}
-                  as='div'
-                >
-                  Crowd Status
-                </Sidebar.Item>
-              </Link>
+      <Link to='/dashboard?tab=crowd' key="crowd">
+        <Sidebar.Item
+          active={tab === 'crowd'}
+          icon={HiUserGroup}
+          className={`hover:bg-gray-700 hover:text-white transition-all duration-200 ease-in-out 
+                      ${tab === 'crowd' ? 'bg-blue-500 text-white shadow-md scale-105' : ''} p-4 mb-4`}
+          as='div'
+        >
+          Crowd Status
+        </Sidebar.Item>
+      </Link>
 
-              <Link to='/dashboard?tab=staff' key="crowd">
-                <Sidebar.Item
-                  active={tab === 'staff'}
-                  icon={HiDocument}
-                  as='div'
-                >
-                  Staff Management
-                </Sidebar.Item>
-              </Link>
-             
-              
-          <Sidebar.Item 
-            icon={HiArrowSmRight} 
-            className="cursor-pointer" 
-            onClick={handleSignOut}
-            key="signout"
-          >
-            Sign Out
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar.Items>
-    </Sidebar>
+      <Link to='/dashboard?tab=staff' key="staff">
+        <Sidebar.Item
+          active={tab === 'staff'}
+          icon={HiDocument}
+          className={`hover:bg-gray-700 hover:text-white transition-all duration-200 ease-in-out 
+                      ${tab === 'staff' ? 'bg-blue-500 text-white shadow-md scale-105' : ''} p-4 mb-4`}
+          as='div'
+        >
+          Staff Management
+        </Sidebar.Item>
+      </Link>
+
+      <Sidebar.Item 
+        icon={HiArrowSmRight} 
+        className="cursor-pointer mt-8 p-4 hover:bg-red-600 hover:text-white transition-all duration-200 ease-in-out rounded-lg shadow-md"
+        onClick={handleSignOut}
+        key="signout"
+      >
+        Sign Out
+      </Sidebar.Item>
+    </Sidebar.ItemGroup>
+  </Sidebar.Items>
+</Sidebar>
+
+  
+
   );
 }

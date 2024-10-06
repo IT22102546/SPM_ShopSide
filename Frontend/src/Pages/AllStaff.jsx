@@ -1,7 +1,9 @@
-import { Label, TextInput, Table, Modal, Button } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import { Label, TextInput, Modal, Button } from "flowbite-react";
+import React, { useEffect, useState,useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import backgroundImage from '../Pages/Images/manageStaff.jpg';
+import { useReactToPrint } from 'react-to-print';
 
 export default function AllStaff() {
   const navigate = useNavigate();
@@ -22,16 +24,13 @@ export default function AllStaff() {
     phone: "",
     age: "",
   });
-
+  const componentPDF = useRef();
   // Fetch all staff data using useEffect
   useEffect(() => {
     const fetchAllStaff = async () => {
       try {
-        const res = await fetch(
-          `/api/staff/getAllStaff/${currentUser.brnumber}`
-        );
+        const res = await fetch(`/api/staff/getAllStaff/${currentUser.brnumber}`);
         const data = await res.json();
-
         if (data.success) {
           setStaffRecords(data.staff); // Set the fetched staff records
         } else {
@@ -48,13 +47,23 @@ export default function AllStaff() {
     }
   }, [currentUser.brnumber]);
 
-  // Handle assigning job (already exists in your code)
+  // Handle assigning job
   const handleAssignJobClick = (staff) => {
     setSelectedStaff(staff);
     setIsModalOpen(true);
   };
-
-  // Submit job assignment (already exists in your code)
+  const generatePDF = useReactToPrint({
+    content: () => componentPDF.current,
+    documentTitle: 'Total Item Report',
+    onBeforeGetContent: () => {
+        setIsGeneratingPDF(true);
+        return Promise.resolve();
+    },
+    onAfterPrint: () => {
+        setIsGeneratingPDF(false);
+        alert('Data saved in PDF');
+    }
+});
   const handleSubmitJob = async () => {
     if (!jobDescription.trim()) {
       setErrorMessage("Job description cannot be empty.");
@@ -74,12 +83,11 @@ export default function AllStaff() {
         }
       );
       const data = await res.json();
-
+alert("job assign successfully")
       if (data.success) {
         setSuccessMessage("Job assigned successfully.");
         setIsModalOpen(false);
-        // Refresh staff records after successful job assignment
-        fetchAllStaff(); // Fetch staff records to show the update
+        fetchAllStaff(); // Refresh staff records
       } else {
         setErrorMessage("Failed to assign job.");
       }
@@ -105,8 +113,8 @@ export default function AllStaff() {
 
       if (data.success) {
         setSuccessMessage("Job removed successfully.");
-        // Refresh staff records after successful job removal
-        fetchAllStaff(); // Fetch staff records to reflect the removed job
+        fetchAllStaff(); // Refresh staff records
+        alert("removed job successfully")
       } else {
         setErrorMessage("Failed to remove job.");
       }
@@ -118,7 +126,7 @@ export default function AllStaff() {
     }
   };
 
-  //REMOVE STAFF MEMBERS
+  // REMOVE STAFF MEMBERS
   const handleRemoveStaff = async (staff) => {
     try {
       setIsSubmitting(true);
@@ -129,35 +137,19 @@ export default function AllStaff() {
         }
       );
       const data = await res.json();
-
+      alert("staff memeber removed successfully")
       if (data.success) {
         setSuccessMessage("Staff removed successfully.");
-        // Refresh staff records after successful job removal
-        fetchAllStaff(); // Fetch staff records to reflect the removed job
+        fetchAllStaff(); // Refresh staff records
+        alert("staff memeber removed successfully")
       } else {
-        setErrorMessage("Failed to remove Staff member.");
+        setErrorMessage("Failed to remove staff member.");
       }
     } catch (error) {
-      console.error("Error removing job:", error);
-      setErrorMessage("Failed to remove job.");
+      console.error("Error removing staff:", error);
+      setErrorMessage("Failed to remove staff.");
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  // Function to fetch all staff (can be reused to refresh staff data)
-  const fetchAllStaff = async () => {
-    try {
-      const res = await fetch(`/api/staff/getAllStaff/${currentUser.brnumber}`);
-      const data = await res.json();
-      if (data.success) {
-        setStaffRecords(data.staff);
-      } else {
-        setErrorMessage("Failed to fetch staff records");
-      }
-    } catch (error) {
-      console.error("Error fetching staff records:", error);
-      setErrorMessage("Failed to fetch staff records");
     }
   };
 
@@ -192,7 +184,8 @@ export default function AllStaff() {
       if (data.success) {
         setSuccessMessage("Staff updated successfully.");
         setIsUpdateModalOpen(false);
-        fetchAllStaff(); // Refresh staff records after successful update
+        alert("updated successfully")
+         // Refresh staff records after update
       } else {
         setErrorMessage("Failed to update staff.");
       }
@@ -204,202 +197,219 @@ export default function AllStaff() {
     }
   };
 
-
   return (
     <>
-      <div className="bg-gray-100 w-full">
-        <div className="p-10 bg-gray-50 flex flex-wrap justify-between gap-32">
-          <div>
-            <h1 className="text-2xl font-cinzel font-semibold">
-              Welcome back!,{" "}
-              <span className="text-gradient-to-r from-purple-700 to-purple-900 font-normal">
-                {currentUser.shopname}
-              </span>
-              <br />
-              <div className="text-sm font-sans font-normal mt-5">
-                <h1>
-                  Shop ID{" "}
-                  <span className="text-gray-600 font-normal mx-10">
-                    : {currentUser.shopID}
-                  </span>
-                </h1>
-                <h1>
-                  Email{" "}
-                  <span className="text-gray-600 font-normal mx-14">
-                    : {currentUser.email}
-                  </span>
-                </h1>
-                <h1>
-                  BR Number{" "}
-                  <span className="text-gray-600 font-normal mx-4">
-                    : {currentUser.brnumber}
-                  </span>
-                </h1>
-              </div>
-            </h1>
-          </div>
-        </div>
+      <div
+        className="bg-gray-100 w-full"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          // Make sure the background covers the full viewport height
+        }}
+      >
+        <div className="p-10 bg-gray-50 bg-opacity-75 rounded-lg">
+        <div className="p-8 flex flex-wrap justify-between gap-12">
+  <div className="p-8 bg-white rounded-xl shadow-lg border border-gray-200">
+    <h1 className="text-4xl font-cinzel font-bold text-gray-900">
+      Welcome back,{" "}
+      <span className="bg-gradient-to-r from-purple-600 to-purple-800 text-transparent bg-clip-text">
+        {currentUser.shopname}
+      </span>
+    </h1>
+    <div className="text-md font-sans font-light mt-6 space-y-4">
+      <h2 className="text-gray-600">
+        Email{" "}
+        <span className="text-gray-700 font-medium">
+          : {currentUser.email}
+        </span>
+      </h2>
+      <h2 className="text-gray-600">
+        BR Number{" "}
+        <span className="text-gray-700 font-medium">
+          : {currentUser.brnumber}
+        </span>
+      </h2>
+    </div>
+  </div>
+</div>
 
-        <h1 className="text-xl px-10 pb-4 font-sans">Staff Records</h1>
-        <Link to='/dashboard?tab=staff' className="p-10">
-        
-            <button
-            className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-
-            >
-            Return
+<div ref={componentPDF} style={{ width: '100%' }}>
+          <h1 className="text-xl px-10 pb-4 font-sans">Staff Records</h1>
+          <Link to="/dashboard?tab=staff" className="p-10">
+            <button className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300">
+              Return
             </button>
-        </Link>
-        <div className="p-10">
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-          <Table>
-            <Table.Head className="text-center">
-              <Table.HeadCell>Name</Table.HeadCell>
-              <Table.HeadCell>Email</Table.HeadCell>
-              <Table.HeadCell>Gender</Table.HeadCell>
-              <Table.HeadCell>Phone</Table.HeadCell>
-              <Table.HeadCell>Age</Table.HeadCell>
-              <Table.HeadCell>Assigned Job</Table.HeadCell>
-              <Table.HeadCell>Actions</Table.HeadCell>
-            </Table.Head>
-            <Table.Body>
-              {staffRecords.map((staff) => (
-                <Table.Row key={staff.id} className="text-center">
-                  <Table.Cell>{staff.name}</Table.Cell>
-                  <Table.Cell>{staff.email}</Table.Cell>
-                  <Table.Cell>{staff.gender}</Table.Cell>
-                  <Table.Cell>{staff.phone}</Table.Cell>
-                  <Table.Cell>{staff.age} yrs</Table.Cell>
-                  <Table.Cell>{staff.jobDescription}</Table.Cell>
-                  <Table.Cell>
-                    <button
-                      className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-                      onClick={() => handleAssignJobClick(staff)}
-                    >
-                      Assign Job
-                    </button>
-                    <button
-                      className="mx-1 p-2 px-3 rounded-lg bg-gradient-to-r from-pink-700 to-pink-900 text-white hover:bg-gradient-to-r hover:from-pink-700 hover:to-pink-800 transition duration-300"
-                      onClick={() => handleRemoveJobClick(staff)}
-                    >
-                      Remove Job
-                    </button>
-                    <button
-                      className="mx-1 p-2 px-3 rounded-lg bg-gradient-to-r from-green-700 to-green-900 text-white hover:bg-gradient-to-r hover:from-green-700 hover:to-green-800 transition duration-300"
-                      onClick={() => handleUpdateStaffClick(staff) }
-                    >
-                      Update
-                    </button>
-                    <button
-                      className=" p-2 px-3 rounded-lg bg-gradient-to-r from-red-700 to-red-900 text-white hover:bg-gradient-to-r hover:from-red-700 hover:to-red-800 transition duration-300"
-                      onClick={() => handleRemoveStaff(staff)}
-                    >
-                      Remove
-                    </button>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
+          </Link>
+
+          <div className="p-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {staffRecords.map((staff) => (
+              <div key={staff.id} className="bg-white p-5 rounded-lg shadow-md">
+                <h2 className="text-lg font-semibold">{staff.name}</h2>
+                <p>Email: {staff.email}</p>
+                <p>Gender: {staff.gender}</p>
+                <p>Phone: {staff.phone}</p>
+                <p>Age: {staff.age} yrs</p>
+                <p>Assigned Job: {staff.jobDescription}</p>
+                <div className="flex justify-between mt-3">
+                  <button
+                    className="p-1 px-2 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-100"
+                    onClick={() => handleAssignJobClick(staff)}
+                  >
+                    Assign Job
+                  </button>
+                  <button
+                    className="p-1 px-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-100"
+                    onClick={() => handleRemoveJobClick(staff)}
+                  >
+                    Remove Job
+                  </button>
+                </div>
+                <div className="flex justify-between mt-3">
+                  <button
+                    className="p-1 px-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition duration-100"
+                    onClick={() => handleUpdateStaffClick(staff)}
+                  >
+                    Update
+                  </button>
+                  <button
+                    className="p-1 px-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-100"
+                    onClick={() => handleRemoveStaff(staff)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          </div>
+          {/* Assign Job Modal */}
+          <Modal
+  show={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  className="rounded-lg shadow-lg border border-gray-200"
+>
+  <Modal.Header className="bg-blue-500 text-white text-center rounded-t-lg p-4">
+    <h3 className="text-xl font-semibold">Assign Job</h3>
+  </Modal.Header>
+  <Modal.Body className="p-6 bg-gray-50">
+    <div className="flex flex-col gap-4">
+      <Label htmlFor="jobDescription" className="text-lg font-medium text-gray-700">
+        Job Description
+      </Label>
+      <TextInput
+        id="jobDescription"
+        value={jobDescription}
+        onChange={(e) => setJobDescription(e.target.value)}
+        className="border-2 border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-md p-2 shadow-sm"
+        placeholder="Enter job description"
+      />
+    </div>
+  </Modal.Body>
+  <Modal.Footer className="bg-gray-100 flex justify-end gap-4 p-4 rounded-b-lg">
+    <Button
+      onClick={handleSubmitJob}
+      disabled={isSubmitting}
+      className={`bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 ease-in-out ${
+        isSubmitting
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:bg-blue-600 hover:shadow-lg"
+      }`}
+    >
+      
+      {isSubmitting ? "Submitting..." : "Assign"}
+    </Button>
+    <Button
+      color="gray"
+      onClick={() => setIsModalOpen(false)}
+      className="bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out"
+    >
+      Cancel
+    </Button>
+  </Modal.Footer>
+</Modal>
+
+
+          {/* Update Staff Modal */}
+          <Modal
+  show={isUpdateModalOpen}
+  onClose={() => setIsUpdateModalOpen(false)}
+  className="rounded-xl shadow-lg border border-gray-300"
+>
+  <Modal.Header className="bg-green-500 text-white rounded-t-xl p-4">
+    <h3 className="text-lg font-semibold text-center">Update Staff</h3>
+  </Modal.Header>
+  <Modal.Body className="p-6 bg-gray-50">
+    <div className="flex flex-col gap-5">
+      <Label htmlFor="name" className="text-md font-medium text-gray-700">
+        Name
+      </Label>
+      <TextInput
+        id="name"
+        value={updatedStaffDetails.name}
+        onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, name: e.target.value })}
+        className="border-2 border-green-400 rounded-md p-2 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm"
+        placeholder="Enter name"
+      />
+      
+      <Label htmlFor="email" className="text-md font-medium text-gray-700">
+        Email
+      </Label>
+      <TextInput
+        id="email"
+        value={updatedStaffDetails.email}
+        onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, email: e.target.value })}
+        className="border-2 border-green-400 rounded-md p-2 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm"
+        placeholder="Enter email"
+      />
+      
+      <Label htmlFor="phone" className="text-md font-medium text-gray-700">
+        Phone
+      </Label>
+      <TextInput
+        id="phone"
+        value={updatedStaffDetails.phone}
+        onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, phone: e.target.value })}
+        className="border-2 border-green-400 rounded-md p-2 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm"
+        placeholder="Enter phone number"
+      />
+      
+      <Label htmlFor="age" className="text-md font-medium text-gray-700">
+        Age
+      </Label>
+      <TextInput
+        id="age"
+        value={updatedStaffDetails.age}
+        onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, age: e.target.value })}
+        className="border-2 border-green-400 rounded-md p-2 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm"
+        placeholder="Enter age"
+      />
+    </div>
+  </Modal.Body>
+  <Modal.Footer className="bg-gray-100 flex justify-end gap-4 p-4 rounded-b-xl">
+    <Button
+      onClick={handleSubmitUpdate}
+      disabled={isSubmitting}
+      className={`bg-green-500 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition-all duration-300 ease-in-out ${
+        isSubmitting
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:bg-green-600 hover:shadow-lg"
+      }`}
+    >
+      {isSubmitting ? "Updating..." : "Update"}
+    </Button>
+    <Button
+      color="gray"
+      onClick={() => setIsUpdateModalOpen(false)}
+      className="bg-gray-400 text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-gray-500 hover:shadow-lg transition-all duration-300 ease-in-out"
+    >
+      Cancel
+    </Button>
+  </Modal.Footer>
+</Modal>
+
         </div>
       </div>
-
-      {/* Modal for Assigning Job */}
-      {isModalOpen && (
-        <Modal
-          show={isModalOpen}
-          size="lg"
-          popup={true}
-          onClose={() => setIsModalOpen(false)}
-        >
-          <Modal.Header />
-          <Modal.Body>
-            <div className="space-y-6">
-              <h3 className="text-xl font-medium text-gray-900">
-                Assign Job to:{" "}
-                <span className="text-purple-700">{selectedStaff?.name}</span>
-              </h3>
-              <div>
-                <Label htmlFor="jobDescription" value="Job Description" />
-                <TextInput
-                  id="jobDescription"
-                  placeholder="Enter job description"
-                  value={jobDescription}
-                  onChange={(e) => setJobDescription(e.target.value)}
-                  required={true}
-                />
-              </div>
-              <div className="w-full flex justify-end gap-2">
-                <Button
-                  className="p-2 px-3 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-                  onClick={handleSubmitJob}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Submitting..." : "Submit"}
-                </Button>
-                <Button
-                  className="p-2 px-3 rounded-lg bg-gradient-to-r from-gray-600 to-gray-700 text-white"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </Modal.Body>
-        </Modal>
-      )}
-
-      {/* Modal for Updating Staff */}
-      <Modal show={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)}>
-        <Modal.Header>Update Staff</Modal.Header>
-        <Modal.Body>
-          <div>
-            <Label htmlFor="staff-name" value="Name" />
-            <TextInput
-              id="staff-name"
-              value={updatedStaffDetails.name}
-              onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, name: e.target.value })}
-              required
-            />
-            <Label htmlFor="staff-email" value="Email" />
-            <TextInput
-              id="staff-email"
-              type="email"
-              value={updatedStaffDetails.email}
-              onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, email: e.target.value })}
-              required
-            />
-            <Label htmlFor="staff-phone" value="Phone" />
-            <TextInput
-              id="staff-phone"
-              value={updatedStaffDetails.phone}
-              readOnly // Read-only since we don't want to change the phone
-            />
-            <Label htmlFor="staff-age" value="Age" />
-            <TextInput
-              id="staff-age"
-              value={updatedStaffDetails.age}
-              onChange={(e) => setUpdatedStaffDetails({ ...updatedStaffDetails, age: e.target.value })}
-              required
-            />
-            {errorMessage && (
-              <p className="text-red-500">{errorMessage}</p>
-            )}
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            disabled={isSubmitting}
-            onClick={handleSubmitUpdate}
-            className="p-1 rounded-lg bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:bg-gradient-to-r hover:from-purple-700 hover:to-purple-800 transition duration-300"
-          >
-            {isSubmitting ? "Updating..." : "Update"}
-          </Button>
-          <Button color="gray" onClick={() => setIsUpdateModalOpen(false)}>
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 }
